@@ -1,0 +1,2541 @@
+<!DOCTYPE html>
+<html lang="ms">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UpsiRent-I | Portal Rumah Sewa Pelajar UPSI & Homestay Tanjung Malim (Powered by Gemini AI)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        pinkbrand: {
+                            50: '#fff0f6',
+                            100: '#ffe3ee',
+                            200: '#ffc6de',
+                            300: '#ff98c3',
+                            400: '#ff5ca0',
+                            500: '#ff2e84',
+                            600: '#e61266',
+                            700: '#bf064f',
+                            800: '#9e0943',
+                            900: '#830c3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .pink-gradient {
+            background: linear-gradient(135deg, #FF2E84 0%, #FF6B9D 55%, #FFA3C2 100%);
+        }
+
+        .ai-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        }
+
+        .soft-pink-bg {
+            background: linear-gradient(180deg, #FFF5F9 0%, #FFFFFF 100%);
+        }
+
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(255, 46, 132, 0.15), 0 8px 10px -6px rgba(255, 46, 132, 0.08);
+        }
+
+        .thumb-active {
+            border: 3px solid #FF2E84;
+            transform: scale(1.03);
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.92; transform: scale(1.04); }
+        }
+
+        .ai-pulse {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fdf2f8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #db2777;
+        }
+    </style>
+</head>
+
+<body class="soft-pink-bg font-sans text-slate-800 min-h-screen flex flex-col pb-16 md:pb-0">
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- BAR PENGUMUMAN ATAS TUNGGAL & KEMAS -->
+    <div class="pink-gradient text-white text-xs sm:text-sm py-2 px-4 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-200"></i>
+                <span><strong>Istimewa Pelajar UPSI:</strong> Sahkan Kad Matrik untuk nikmati <strong>Diskaun 10% Automatik</strong> + Khidmat Pembantu Pintar Gemini AI!</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+                <a href="public/login.php" class="bg-white/20 hover:bg-white/30 text-white px-2.5 py-0.5 rounded-lg font-bold transition flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-right-to-bracket text-[10px]"></i> Log Masuk Portal PHP
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAR NAVIGASI UTAMA (BERSIH, TERATUR & MODEN) -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-pinkbrand-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <!-- Logo & Identiti -->
+            <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="resetFilters()">
+                <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl pink-gradient flex items-center justify-center text-white shadow-md shadow-pinkbrand-200 shrink-0">
+                    <i class="fa-solid fa-house-chimney-heart text-xl sm:text-2xl"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-pinkbrand-600 to-pinkbrand-400 bg-clip-text text-transparent">UpsiRent-I</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold text-white bg-indigo-600 flex items-center gap-1">
+                            <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i> AI
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-bold hidden sm:block">Tanjung Malim • Proton City • Behrang</p>
+                </div>
+            </div>
+
+            <!-- Pilihan Mod Utama: Rental vs Homestay vs Roommate (Tersusun di Tengah) -->
+            <nav class="hidden md:flex items-center bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 shadow-inner">
+                <button id="tab-rental" onclick="switchCategory('rental')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all pink-gradient text-white shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-graduate"></i> Rumah Sewa
+                </button>
+                <button id="tab-homestay" onclick="switchCategory('homestay')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-pinkbrand-600 flex items-center gap-1.5">
+                    <i class="fa-solid fa-suitcase-rolling"></i> Homestay
+                </button>
+                <button id="tab-roommate" onclick="switchCategory('roommate')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-pinkbrand-600 flex items-center gap-1.5">
+                    <i class="fa-solid fa-users"></i> Cari Rakan Bilik
+                </button>
+            </nav>
+
+            <!-- Kumpulan Tindakan Kanan (Kemas, Tidak Berselerak) -->
+            <div class="flex items-center gap-2.5">
+                <!-- Gemini AI Sparkle Button -->
+                <button onclick="openGeminiModal()" class="flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl ai-gradient text-white font-extrabold text-xs shadow-md shadow-indigo-100 hover:opacity-95 transition ai-pulse" title="Tanya Gemini AI">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                    <span class="hidden xl:inline">Tanya Gemini AI</span>
+                    <span class="xl:hidden">AI</span>
+                </button>
+
+                <!-- Simpanan (Wishlist) -->
+                <button onclick="toggleWishlistView()" id="wishlistHeaderBtn" class="flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-slate-50 hover:bg-pinkbrand-50 border border-slate-200 text-slate-700 font-bold text-xs transition" title="Senarai Disimpan">
+                    <i class="fa-solid fa-heart text-pinkbrand-500"></i>
+                    <span id="wishlistCountBadge" class="bg-pinkbrand-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">0</span>
+                </button>
+
+                <!-- Iklankan Rumah (Untuk Tuan Rumah) -->
+                <button onclick="openLandlordModal()" class="hidden lg:inline-flex items-center gap-1 px-3 py-2 text-xs font-bold text-slate-700 hover:text-pinkbrand-600 transition">
+                    <i class="fa-solid fa-plus-circle text-pinkbrand-500"></i>
+                    <span>Iklankan Rumah</span>
+                </button>
+
+                <!-- Divider halus -->
+                <div class="hidden sm:block h-6 w-px bg-slate-200 mx-0.5"></div>
+
+                <!-- Kumpulan Log Masuk & Daftar (JELAS, TERANG & TERTIB) -->
+                <div class="flex items-center gap-2">
+                    <a href="public/login.php" class="flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-extrabold text-xs transition shadow-sm hover:border-pinkbrand-300">
+                        <i class="fa-solid fa-arrow-right-to-bracket text-pinkbrand-500 text-xs"></i>
+                        <span>Log Masuk</span>
+                    </a>
+                    <a href="public/register.php" class="hidden sm:flex items-center gap-1.5 px-4 py-2.5 rounded-2xl pink-gradient text-white font-extrabold text-xs shadow-md shadow-pinkbrand-200 transition hover:opacity-95">
+                        <i class="fa-solid fa-user-plus text-xs"></i>
+                        <span>Daftar</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pilihan Kategori Versi Telefon -->
+        <div class="flex md:hidden px-4 pb-2.5 gap-1.5 border-t border-slate-100 pt-2">
+            <button id="mob-tab-rental" onclick="switchCategory('rental')" class="flex-1 py-1.5 rounded-xl text-xs font-bold pink-gradient text-white shadow-sm">
+                <i class="fa-solid fa-user-graduate mr-1"></i>Sewa
+            </button>
+            <button id="mob-tab-homestay" onclick="switchCategory('homestay')" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">
+                <i class="fa-solid fa-suitcase-rolling mr-1"></i>Homestay
+            </button>
+            <button id="mob-tab-roommate" onclick="switchCategory('roommate')" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">
+                <i class="fa-solid fa-users mr-1"></i>Roommate
+            </button>
+        </div>
+    </header>
+
+    <!-- BAHAGIAN HERO DENGAN GEMINI AI SEARCH PROMPT -->
+    <section class="relative overflow-hidden py-8 px-4 sm:px-6 lg:px-8 border-b border-pinkbrand-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="bg-gradient-to-r from-pinkbrand-600 via-pinkbrand-500 to-rose-400 rounded-3xl p-6 sm:p-10 text-white shadow-xl shadow-pinkbrand-100 relative overflow-hidden">
+                <!-- Decorative blur bubbles -->
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
+
+                <div class="max-w-3xl relative z-10">
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-extrabold uppercase tracking-wider">
+                            <i class="fa-solid fa-shield-heart"></i> Sistem Kediaman Rasmi Pelajar & Homestay UPSI
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-950/40 backdrop-blur-sm text-xs font-bold text-indigo-100 border border-indigo-300/30">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> AI Matchmaker Aktif
+                        </span>
+                    </div>
+
+                    <h1 id="heroTitle" class="text-2xl sm:text-4xl font-extrabold leading-tight mb-2.5">
+                        Cari Rumah Sewa Pelajar & Homestay Sekitar UPSI Dengan Mudah & Selamat
+                    </h1>
+                    <p id="heroSubtitle" class="text-pink-50 text-xs sm:text-sm sm:text-base mb-5 leading-relaxed font-medium">
+                        Tengok gambar bilik demi bilik gaya Airbnb, semak senarai inventori kelengkapan, bandingkan sewa bilik, semak klausa kontrak dengan AI, dan hubungi terus tuan rumah!
+                    </p>
+
+                    <!-- Pautan Pantas AI Prompt Pill -->
+                    <div class="flex flex-wrap items-center gap-1.5 mb-2 text-xs">
+                        <span class="text-pink-100 font-bold mr-1 flex items-center gap-1">
+                            <i class="fa-solid fa-bolt text-amber-300"></i> Cuba tanya AI:
+                        </span>
+                        <button onclick="triggerAiWithQuery('Saya pelajar KSAS bajet bawah RM200 siap WiFi')" class="bg-white/15 hover:bg-white/25 px-2.5 py-1 rounded-xl text-white font-medium transition backdrop-blur-sm border border-white/20">
+                            "Siswi KSAS bajet &lt; RM200"
+                        </button>
+                        <button onclick="triggerAiWithQuery('Semak klausa keselamatan kontrak sewa')" class="bg-white/15 hover:bg-white/25 px-2.5 py-1 rounded-xl text-white font-medium transition backdrop-blur-sm border border-white/20">
+                            "Semak klausa kontrak sewa"
+                        </button>
+                        <button onclick="triggerAiWithQuery('Kira anggaran kos hidup bulanan pelajar UPSI')" class="bg-white/15 hover:bg-white/25 px-2.5 py-1 rounded-xl text-white font-medium transition backdrop-blur-sm border border-white/20">
+                            "Kira kos sara hidup UPSI"
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KOTAK PENAPIS CARIAN AIRBNB-STYLE TERAPUNG (5 SEGMEN KEMAS & JELAS) -->
+                <div class="mt-6 bg-white p-3.5 sm:p-4 rounded-3xl shadow-2xl text-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 border border-pinkbrand-100 relative z-20">
+                    <!-- 1. Lokasi / Kawasan -->
+                    <div class="p-2 sm:p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-0.5">Lokasi / Kawasan</label>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-location-dot text-pinkbrand-500 text-xs mr-2"></i>
+                            <select id="locationFilter" onchange="renderListings()" class="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 focus:outline-none cursor-pointer">
+                                <option value="all">Semua Kawasan (Tg. Malim & Behrang)</option>
+                                <option value="Taman Bahtera">Taman Bahtera (Dekat KSAJS)</option>
+                                <option value="Proton City">Proton City (Dekat KSAS)</option>
+                                <option value="Taman Universiti">Taman Universiti (Pintu Timur)</option>
+                                <option value="Behrang 2020">Bandar Behrang 2020</option>
+                                <option value="Behrang Stesen">Behrang Stesen</option>
+                                <option value="Kalumpang">Kalumpang</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 2. Status Kemasukan -->
+                    <div class="p-2 sm:p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-0.5">Status Kemasukan</label>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-calendar-check text-pinkbrand-500 text-xs mr-2"></i>
+                            <select id="availabilityFilter" onchange="renderListings()" class="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 focus:outline-none cursor-pointer">
+                                <option value="all">Semua Status</option>
+                                <option value="Masuk Segera">Masuk Segera</option>
+                                <option value="Semester Depan">Semester Depan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 3. Bajet Maksimum -->
+                    <div class="p-2 sm:p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-0.5">Bajet Maksimum</label>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-wallet text-pinkbrand-500 text-xs mr-2"></i>
+                            <select id="priceFilter" onchange="renderListings()" class="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 focus:outline-none cursor-pointer">
+                                <option value="99999">Semua Harga</option>
+                                <option value="200">Bawah RM 200 (Kongsi)</option>
+                                <option value="350">Bawah RM 350 (Bilik)</option>
+                                <option value="800">Bawah RM 800</option>
+                                <option value="1300">Bawah RM 1,300 (Rumah)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 4. Kemudahan / Kata Kunci -->
+                    <div class="p-2 sm:p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-0.5">Kemudahan / Acara</label>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-magnifying-glass text-pinkbrand-500 text-xs mr-2"></i>
+                            <input id="searchInput" oninput="renderListings()" type="text" placeholder="WiFi, Bas, Konvo..." class="w-full bg-transparent text-xs sm:text-sm font-bold text-slate-800 focus:outline-none placeholder-slate-400" />
+                        </div>
+                    </div>
+
+                    <!-- 5. Butang Tapis Carian -->
+                    <div class="flex items-center">
+                        <button type="button" onclick="renderListings()" class="w-full h-full py-3 px-4 rounded-2xl pink-gradient text-white font-extrabold text-xs sm:text-sm shadow-md shadow-pinkbrand-200 hover:opacity-95 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Tapis Carian</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAR PINTAS CIRI-CIRI UTAMA (PUSAT BANTUAN PELAJAR) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-pinkbrand-100 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-pinkbrand-500 inline-block"></span>
+                        <span>Pusat Bantuan Pelajar & Utiliti Interaktif</span>
+                    </h3>
+                    <p class="text-[11px] text-slate-400 font-medium">Alat kira sewa, jadual bas shuttle kampus, dan panduan keselamatan UPSI di satu tempat</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <!-- Gemini AI Helper -->
+                <button onclick="openGeminiModal()" class="flex items-center gap-3 p-3.5 rounded-2xl bg-indigo-50/70 hover:bg-indigo-100/90 text-left transition border border-indigo-100 group card-hover">
+                    <div class="w-10 h-10 rounded-xl ai-gradient text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm text-amber-200"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold text-indigo-950">Gemini AI Sewa</div>
+                        <div class="text-[11px] text-indigo-600 font-medium">Saranan & Semak</div>
+                    </div>
+                </button>
+
+                <!-- Kalkulator Kongsi Sewa -->
+                <button onclick="openCalculatorModal()" class="flex items-center gap-3 p-3.5 rounded-2xl bg-rose-50/70 hover:bg-rose-100/90 text-left transition border border-rose-100 group card-hover">
+                    <div class="w-10 h-10 rounded-xl pink-gradient text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-calculator text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold text-slate-800">Kalkulator Sewa</div>
+                        <div class="text-[11px] text-slate-500 font-medium">Kira Kos Kongsi</div>
+                    </div>
+                </button>
+
+                <!-- Laluan Bas UPSI -->
+                <button onclick="openInfoModal('bus')" class="flex items-center gap-3 p-3.5 rounded-2xl bg-blue-50/70 hover:bg-blue-100/90 text-left transition border border-blue-100 group card-hover">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-bus text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold text-slate-800">Laluan Bas UPSI</div>
+                        <div class="text-[11px] text-slate-500 font-medium">Jadual Shuttle</div>
+                    </div>
+                </button>
+
+                <!-- Panduan Kontrak & Anti Scam -->
+                <button onclick="openInfoModal('checklist')" class="flex items-center gap-3 p-3.5 rounded-2xl bg-emerald-50/70 hover:bg-emerald-100/90 text-left transition border border-emerald-100 group card-hover">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-file-shield text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold text-slate-800">Elak Scam Sewa</div>
+                        <div class="text-[11px] text-slate-500 font-medium">Semak Kontrak</div>
+                    </div>
+                </button>
+
+                <!-- Diskaun Pelajar 10% -->
+                <button onclick="openVerifyModal()" class="col-span-2 sm:col-span-1 flex items-center gap-3 p-3.5 rounded-2xl bg-amber-50/70 hover:bg-amber-100/90 text-left transition border border-amber-100 group card-hover">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-id-card-clip text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-extrabold text-slate-800">Diskaun 10%</div>
+                        <div class="text-[11px] text-amber-700 font-medium">Kad Matrik UPSI</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- BANNER STATUS DISKAUN PELAJAR AKTIF -->
+    <div id="studentActiveBanner" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-3">
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-base shrink-0">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-emerald-900 text-xs sm:text-sm">Diskaun Pelajar 10% Aktif!</h3>
+                    <p id="verifiedStudentInfo" class="text-[11px] text-emerald-700">Harga semua rumah sewa dan homestay telah ditolak 10% secara automatik untuk anda.</p>
+                </div>
+            </div>
+            <button onclick="removeVerification()" class="text-xs font-bold text-emerald-700 underline hover:text-emerald-900">
+                Tukar ke Harga Biasa (Bukan Pelajar)
+            </button>
+        </div>
+    </div>
+
+    <!-- FLOATING BAR PERBANDINGAN RUMAH (MUNCUL APABILA PILIH MIN 2 RUMAH) -->
+    <div id="compareBar" class="hidden fixed bottom-16 md:bottom-6 inset-x-4 max-w-xl mx-auto z-40 bg-slate-900/95 text-white p-3.5 rounded-2xl shadow-2xl backdrop-blur-md border border-slate-700 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg pink-gradient flex items-center justify-center text-xs font-extrabold">
+                <span id="compareCount">0</span>
+            </span>
+            <span class="text-xs font-bold">Rumah dipilih untuk banding</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="clearComparison()" class="px-2.5 py-1 text-slate-400 hover:text-white text-xs font-medium">Batal</button>
+            <button onclick="openCompareModal()" class="px-4 py-1.5 rounded-xl pink-gradient text-white font-extrabold text-xs shadow-md">
+                <i class="fa-solid fa-scale-balanced mr-1"></i> Bandingkan Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- KANDUNGAN UTAMA: SENARAI RUMAH SEWA / HOMESTAY / RAKAN BILIK -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex-1 w-full">
+        <!-- Tajuk & Kawalan Paparan -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+            <div>
+                <div class="flex items-center gap-2">
+                    <h2 id="sectionHeading" class="text-xl sm:text-2xl font-extrabold text-slate-900">Senarai Rumah Sewa Pelajar</h2>
+                    <span id="filterStatusBadge" class="hidden px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-pinkbrand-100 text-pinkbrand-700"></span>
+                </div>
+                <p id="resultCount" class="text-xs sm:text-sm text-slate-500 font-medium">Klik pada mana-mana rumah untuk tengok gambar setiap bilik & ruang seperti Airbnb</p>
+            </div>
+
+            <!-- Aksesibiliti Saiz Tulisan & Reset -->
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+                <button onclick="toggleLargeText()" id="largeTextBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-pinkbrand-50 shadow-sm">
+                    <i class="fa-solid fa-text-height text-pinkbrand-500"></i>
+                    <span id="largeTextLabel">Tulisan Besar</span>
+                </button>
+                <button onclick="resetFilters()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset Penapis
+                </button>
+            </div>
+        </div>
+
+        <!-- GRID SENARAI RUMAH / HOMESTAY -->
+        <div id="listingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <!-- BAHAGIAN RAKAN BILIK (ROOMMATE HUB) - HANYA PAPAR BILA TAB ROOMMATE DIPILIH -->
+        <div id="roommateSection" class="hidden space-y-6">
+            <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
+                <div class="max-w-2xl relative z-10">
+                    <span class="inline-block px-3 py-1 rounded-full bg-purple-500/30 text-purple-200 text-xs font-bold mb-2">
+                        <i class="fa-solid fa-handshake-angle mr-1"></i> Komuniti Rakan Bilik UPSI
+                    </span>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold mb-2">Cari Rakan Serumah / Roommate Yang Sekepala</h3>
+                    <p class="text-slate-300 text-xs sm:text-sm mb-4">
+                        Ada kekosongan 1-2 orang dalam rumah sewa anda? Atau anda pelajar baharu/senior yang mencari kumpulan untuk kongsi sewa rumah sama fakulti? Iklankan diri anda sekarang!
+                    </p>
+                    <button onclick="openPostRoommateModal()" class="px-5 py-2.5 rounded-xl pink-gradient text-white font-extrabold text-xs sm:text-sm shadow-md hover:opacity-95 transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> Siarkan Iklan Cari Rakan Bilik (Percuma)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid Profil Rakan Bilik -->
+            <div id="roommateGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-pinkbrand-100 mt-12 py-8 px-4 text-center text-xs sm:text-sm text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-extrabold text-pinkbrand-600 text-base">UpsiRent-I</span>
+                    <span class="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-extrabold border border-indigo-100">Gemini AI Hackathon Edition</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Sistem Rumah Sewa & Homestay Gaya Airbnb Sekitar Tanjung Malim, Behrang & Proton City</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
+                <button onclick="openInfoModal('bus')" class="hover:text-pinkbrand-600">Jadual Bas</button>
+                <button onclick="openInfoModal('checklist')" class="hover:text-pinkbrand-600">Tip Elak Scam</button>
+                <button onclick="openCalculatorModal()" class="hover:text-pinkbrand-600">Kalkulator Sewa</button>
+                <button onclick="openGeminiModal()" class="hover:text-indigo-600 font-extrabold text-indigo-600">Tanya AI</button>
+                <button onclick="openLandlordModal()" class="hover:text-pinkbrand-600">Portal Tuan Rumah</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MOBILE BOTTOM NAVIGATION DOCK -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-4 flex items-center justify-around shadow-lg">
+        <button onclick="switchCategory('rental')" id="dock-rental" class="flex flex-col items-center text-pinkbrand-600">
+            <i class="fa-solid fa-house-chimney text-base"></i>
+            <span class="text-[10px] font-bold mt-0.5">Sewa</span>
+        </button>
+        <button onclick="switchCategory('homestay')" id="dock-homestay" class="flex flex-col items-center text-slate-400 hover:text-pinkbrand-600">
+            <i class="fa-solid fa-suitcase-rolling text-base"></i>
+            <span class="text-[10px] font-bold mt-0.5">Homestay</span>
+        </button>
+        <button onclick="openGeminiModal()" class="flex flex-col items-center text-indigo-600">
+            <div class="w-8 h-8 rounded-full ai-gradient text-white flex items-center justify-center -mt-3 shadow-md shadow-indigo-200">
+                <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+            </div>
+            <span class="text-[10px] font-extrabold mt-0.5">AI</span>
+        </button>
+        <button onclick="switchCategory('roommate')" id="dock-roommate" class="flex flex-col items-center text-slate-400 hover:text-pinkbrand-600">
+            <i class="fa-solid fa-users text-base"></i>
+            <span class="text-[10px] font-bold mt-0.5">Roommate</span>
+        </button>
+        <button onclick="toggleWishlistView()" id="dock-wishlist" class="flex flex-col items-center text-slate-400 hover:text-pinkbrand-600">
+            <i class="fa-solid fa-heart text-base"></i>
+            <span class="text-[10px] font-bold mt-0.5">Disimpan</span>
+        </button>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1: AIRBNB PROPERTY TOUR MODAL -->
+    <!-- ========================================== -->
+    <div id="propertyModal" class="fixed inset-0 z-50 hidden bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[94vh] overflow-y-auto shadow-2xl border border-pinkbrand-100">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 2: GEMINI AI RENTAL COPILOT (SHOWSTOPPER) -->
+    <!-- ========================================== -->
+    <div id="geminiModal" class="fixed inset-0 z-50 hidden bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-indigo-200 overflow-hidden">
+            <!-- Header Modal AI -->
+            <div class="p-4 sm:p-5 ai-gradient text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg shadow-inner">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-extrabold">UPSI Gemini AI Rental Assistant</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-white/20 text-white">v2.0 Flash</span>
+                        </div>
+                        <p class="text-xs text-indigo-100">Penasihat Rumah Sewa, Semakan Kontrak & Rakan Bilik Pintar</p>
+                    </div>
+                </div>
+                <button onclick="closeGeminiModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Kotak Kunci API Gemini (Pilihan Opsional - Jika Pengguna Ada API Key Sendiri) -->
+            <div class="bg-indigo-50/60 px-4 py-2 border-b border-indigo-100 flex items-center justify-between text-xs">
+                <span class="text-slate-600 font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-key text-indigo-500"></i> Mod AI: <span id="aiModeLabel" class="text-indigo-700 font-bold">Pintar Tempatan (Sedia Digunakan)</span>
+                </span>
+                <button onclick="toggleApiKeyInput()" class="text-indigo-600 font-bold underline hover:text-indigo-800 text-[11px]">
+                    Tetapan Kunci API
+                </button>
+            </div>
+            <div id="apiKeyContainer" class="hidden bg-indigo-50 px-4 py-2.5 border-b border-indigo-100">
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Google Gemini API Key (Pilihan untuk Live API):</label>
+                <div class="flex gap-2">
+                    <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..." class="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-indigo-500 bg-white" />
+                    <button onclick="saveApiKey()" class="px-3 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700">Simpan</button>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-1">Jika tiada kunci API, enjin pintar terbina dalam sistem akan menjawab secara automatik berasaskan pangkalan data UPSI.</p>
+            </div>
+
+            <!-- Chat Area -->
+            <div id="aiChatBox" class="p-4 sm:p-5 flex-1 overflow-y-auto space-y-3.5 text-xs sm:text-sm bg-slate-50/50 min-h-[300px] max-h-[420px]">
+                <!-- Mesej Selamat Datang AI -->
+                <div class="flex items-start gap-2.5">
+                    <div class="w-8 h-8 rounded-xl ai-gradient text-white flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[85%] text-slate-700 leading-relaxed space-y-2">
+                        <p><strong>Hai! Saya Gemini AI Penasihat Sewa UPSI.</strong> Saya boleh bantu anda:</p>
+                        <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                            <li><strong>Cari rumah sewa</strong> ikut bajet, jantina, & jarak ke KSAJS / KSAS.</li>
+                            <li><strong>Semak klausa kontrak</strong> untuk kesan <em>scam</em> atau syarat berat sebelah.</li>
+                            <li><strong>Kira kos sara hidup</strong> bulanan (sewa + bas + makan) di Tanjung Malim.</li>
+                        </ul>
+                        <p class="text-[11px] text-indigo-600 font-bold">Pilih soalan pantas di bawah atau taip sendiri:</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cadangan Soalan Cepat (Quick Chips) -->
+            <div class="px-4 py-2 bg-white border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto text-[11px]">
+                <button onclick="sendQuickPrompt('Saya pelajar perempuan KSAS bajet bawah RM200 nak rumah ada bas')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-pinkbrand-50 hover:text-pinkbrand-600 text-slate-700 font-medium transition border border-slate-200">
+                    🏠 Siswi KSAS &lt; RM200
+                </button>
+                <button onclick="sendQuickPrompt('Saya nak bilik non-sharing seorang dekat KSAJS')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-pinkbrand-50 hover:text-pinkbrand-600 text-slate-700 font-medium transition border border-slate-200">
+                    🛏️ Bilik Single KSAJS
+                </button>
+                <button onclick="sendQuickPrompt('Tuan rumah minta deposit 3 bulan tunai tanpa resit, adakah ini red flag scam?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-pinkbrand-50 hover:text-pinkbrand-600 text-slate-700 font-medium transition border border-slate-200">
+                    🚩 Semak Red Flag Sewa
+                </button>
+                <button onclick="sendQuickPrompt('Berapa kos sewa homestay konvo untuk keluarga 8 orang?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-100 hover:bg-pinkbrand-50 hover:text-pinkbrand-600 text-slate-700 font-medium transition border border-slate-200">
+                    🎓 Homestay Konvo
+                </button>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="p-3.5 bg-white border-t border-slate-200 flex items-center gap-2">
+                <input id="aiUserInput" type="text" onkeydown="handleAiInputKey(event)" placeholder="Tanya Gemini apa sahaja mengenai rumah sewa UPSI..." class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-indigo-500 font-medium" />
+                <button onclick="sendAiMessage()" id="aiSendBtn" class="px-4 py-2.5 rounded-xl ai-gradient text-white font-bold text-xs sm:text-sm shadow-md hover:opacity-95 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span class="hidden sm:inline">Hantar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 3: KALKULATOR KONGSI SEWA INTERAKTIF -->
+    <!-- ========================================== -->
+    <div id="calculatorModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl border border-pinkbrand-200 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl pink-gradient text-white flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900">Kalkulator Kongsi Sewa Pintar</h3>
+                        <p class="text-xs text-slate-500">Kira Pecahan Bil Bulanan Setiap Rakan Serumah</p>
+                    </div>
+                </div>
+                <button onclick="closeCalculatorModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm">
+                <!-- Sewa Rumah Sebulan -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="font-bold text-slate-700">Sewa Rumah Sebulan (RM):</label>
+                        <span id="calcRentDisplay" class="font-extrabold text-pinkbrand-600 text-base">RM 1,200</span>
+                    </div>
+                    <input id="calcRentInput" type="range" min="300" max="2500" step="50" value="1200" oninput="updateCalculator()" class="w-full accent-pinkbrand-500 cursor-pointer" />
+                </div>
+
+                <!-- Bilangan Orang Berkongsi -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="font-bold text-slate-700">Bilangan Rakan Serumah:</label>
+                        <span id="calcPaxDisplay" class="font-extrabold text-pinkbrand-600 text-base">6 Orang</span>
+                    </div>
+                    <input id="calcPaxInput" type="range" min="1" max="10" step="1" value="6" oninput="updateCalculator()" class="w-full accent-pinkbrand-500 cursor-pointer" />
+                </div>
+
+                <!-- Pilihan Tambahan Utiliti -->
+                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2">
+                    <span class="block font-bold text-slate-700 mb-1">Anggaran Bil & Utiliti Kongsi (Bulanan):</span>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span class="text-slate-600"><input type="checkbox" id="calcUtilWifi" checked onchange="updateCalculator()" class="rounded mr-2 accent-pinkbrand-500" />WiFi Unifi 300Mbps</span>
+                        <span class="font-semibold text-slate-700">RM 139</span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span class="text-slate-600"><input type="checkbox" id="calcUtilElec" checked onchange="updateCalculator()" class="rounded mr-2 accent-pinkbrand-500" />Elektrik TNB (Lampu & Kipas)</span>
+                        <span class="font-semibold text-slate-700">RM 90</span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span class="text-slate-600"><input type="checkbox" id="calcUtilWater" checked onchange="updateCalculator()" class="rounded mr-2 accent-pinkbrand-500" />Air Lembaga Air Perak (LAP)</span>
+                        <span class="font-semibold text-slate-700">RM 25</span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span class="text-slate-600"><input type="checkbox" id="calcUtilCoway" onchange="updateCalculator()" class="rounded mr-2 accent-pinkbrand-500" />Penapis Air Coway / Cuckoo</span>
+                        <span class="font-semibold text-slate-700">RM 65</span>
+                    </label>
+                </div>
+
+                <!-- Kad Keputusan Pecahan Seorang -->
+                <div class="bg-gradient-to-br from-pinkbrand-50 via-white to-pinkbrand-100/50 p-4 rounded-2xl border-2 border-pinkbrand-200 text-center space-y-2">
+                    <span class="text-xs font-bold uppercase text-slate-500">Anggaran Bayaran Setiap Pelajar:</span>
+                    <div class="text-3xl font-extrabold text-pinkbrand-600" id="calcPerPersonDisplay">RM 242 <span class="text-xs text-slate-500 font-semibold">/ seorang</span></div>
+                    <div id="calcStudentDiscountNotice" class="text-xs font-bold text-emerald-700">
+                        Jimat sehingga RM 20/seorang jika guna Kad Matrik Pelajar UPSI!
+                    </div>
+                </div>
+
+                <!-- Butang Kongsi ke WhatsApp Group -->
+                <button onclick="shareCalcResultToWhatsApp()" class="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Salin & Hantar Pengiraan ke WhatsApp Group
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 4: PERBANDINGAN RUMAH SIDE-BY-SIDE -->
+    <!-- ========================================== -->
+    <div id="compareModal" class="fixed inset-0 z-50 hidden bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl border border-pinkbrand-200">
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-pinkbrand-500"></i> Perbandingan Rumah Sewa Bersebelahan
+                    </h3>
+                    <p class="text-xs text-slate-500">Bandingkan harga, jarak ke fakulti, kemudahan bilik & syarat kontrak</p>
+                </div>
+                <button onclick="closeCompareModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="compareModalContent" class="overflow-x-auto"></div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 5: SIARKAN IKLAN RAKAN BILIK (ROOMMATE) -->
+    <!-- ========================================== -->
+    <div id="postRoommateModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-pinkbrand-200 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">Iklankan Cari Rakan Bilik</h3>
+                        <p class="text-xs text-slate-500">Hubungkan bersama pelajar UPSI lain</p>
+                    </div>
+                </div>
+                <button onclick="closePostRoommateModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="submitRoommateAd(event)" class="space-y-3.5 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nama Panggilan / Kumpulan:</label>
+                    <input id="rmName" type="text" required placeholder="Cth: Aina & Syuhada" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Jantina:</label>
+                        <select id="rmGender" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500">
+                            <option value="Siswi (Perempuan)">Siswi (Perempuan)</option>
+                            <option value="Siswa (Lelaki)">Siswa (Lelaki)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Fakulti / Semester:</label>
+                        <input id="rmFaculty" type="text" required placeholder="Cth: FBK Sem 3" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kawasan Dicari:</label>
+                        <select id="rmLocation" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500">
+                            <option value="Taman Bahtera">Taman Bahtera</option>
+                            <option value="Proton City">Proton City</option>
+                            <option value="Taman Universiti">Taman Universiti</option>
+                            <option value="Behrang 2020">Behrang 2020</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Bajet Seorang (RM):</label>
+                        <input id="rmBudget" type="number" required placeholder="Cth: 180" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Ciri-ciri & Penerangan Ringkas:</label>
+                    <textarea id="rmDesc" rows="3" required placeholder="Cth: Mencari 2 orang siswi Muslimah pembersih, tak merokok, kami ada motosikal." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500"></textarea>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">No. WhatsApp Untuk Dihubungi:</label>
+                    <input id="rmPhone" type="tel" required placeholder="Cth: 01123456789" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-purple-500" />
+                </div>
+                <button type="submit" class="w-full py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition">
+                    Siarkan Iklan Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 6: PORTAL TUAN RUMAH (IKLANKAN RUMAH) -->
+    <!-- ========================================== -->
+    <div id="landlordModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-pinkbrand-200 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-900 text-pinkbrand-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-house-chimney-medical"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900">Portal Tuan Rumah & Hos</h3>
+                        <p class="text-xs text-slate-500">Iklankan Rumah Sewa / Homestay Anda di UpsiRent-I</p>
+                    </div>
+                </div>
+                <button onclick="closeLandlordModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="submitLandlordProperty(event)" class="space-y-3.5 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nama Tuan Rumah / Syarikat:</label>
+                    <input id="llName" type="text" required placeholder="Cth: Tuan Haji Osman" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Jenis Penyenaraian:</label>
+                        <select id="llCategory" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500">
+                            <option value="rental">Rumah Sewa Pelajar</option>
+                            <option value="homestay">Homestay & Acara</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kawasan:</label>
+                        <select id="llLocation" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500">
+                            <option value="Taman Bahtera">Taman Bahtera (KSAJS)</option>
+                            <option value="Proton City">Proton City (KSAS)</option>
+                            <option value="Taman Universiti">Taman Universiti</option>
+                            <option value="Behrang 2020">Bandar Behrang 2020</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Tajuk Iklan Menarik:</label>
+                    <input id="llTitle" type="text" required placeholder="Cth: Rumah Teres 2 Tingkat Lengkap Perabot Dekat Bas" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kadar Sewa Sebulan/Semalam (RM):</label>
+                        <input id="llPrice" type="number" required placeholder="Cth: 1100" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500" />
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kapasiti Muat (Pax):</label>
+                        <input id="llPax" type="number" required placeholder="Cth: 6" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">No. Telefon WhatsApp:</label>
+                    <input id="llPhone" type="tel" required placeholder="Cth: 0123456789" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-pinkbrand-500" />
+                </div>
+                <p class="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <i class="fa-solid fa-circle-info text-pinkbrand-500 mr-1"></i> Rumah anda akan disahkan dan disenaraikan dalam portal UpsiRent-I. Pelajar yang mengesahkan ID akan layak diskaun 10%.
+                </p>
+                <button type="submit" class="w-full py-3 rounded-2xl pink-gradient text-white font-extrabold text-xs sm:text-sm shadow-md hover:opacity-95 transition">
+                    Hantar Permohonan Iklan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 7: PENGESAHAN KAD MATRIK / PELAJAR -->
+    <!-- ========================================== -->
+    <div id="verifyModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-pinkbrand-200">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl pink-gradient text-white flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-extrabold text-slate-900">Pengesahan Pelajar</h3>
+                        <p class="text-xs text-slate-500">Diskaun Istimewa 10% Untuk Pelajar</p>
+                    </div>
+                </div>
+                <button onclick="closeVerifyModal()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-4">
+                Pelajar yang menggunakan <strong>Kad Matrik UPSI</strong> atau <strong>Surat Tawaran Rasmi</strong> layak mendapat potongan <strong>10% lebih murah</strong> berbanding penyewa luar.
+            </p>
+
+            <form onsubmit="submitStudentVerification(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Nama Penuh Pelajar</label>
+                    <input id="stuName" type="text" required placeholder="Contoh: Muhammad Aiman Bin Zulkifli" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:border-pinkbrand-500" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">No. Matrik UPSI / ID Pelajar</label>
+                    <input id="stuMatric" type="text" required placeholder="Contoh: D20241098231" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium uppercase focus:outline-none focus:border-pinkbrand-500" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Jenis Dokumen Pengesahan</label>
+                    <select id="stuDocType" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium focus:outline-none focus:border-pinkbrand-500">
+                        <option value="Kad Matrik UPSI (MyUPSI Portal)">Kad Matrik UPSI (Aplikasi MyUPSI)</option>
+                        <option value="Surat Tawaran Kemasukan UPSI">Surat Tawaran Rasmi Kemasukan UPSI</option>
+                        <option value="Kad Pelajar IPTA/IPTS Lain">Kad Pelajar IPT Lain (Politeknik / Universiti)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Muat Naik Gambar Kad Matrik / Surat Tawaran</label>
+                    <input type="file" accept="image/*,.pdf" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-pinkbrand-50 file:text-pinkbrand-600 hover:file:bg-pinkbrand-100" />
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-2xl pink-gradient text-white font-bold text-sm shadow-lg shadow-pinkbrand-200 hover:opacity-95 transition">
+                    <i class="fa-solid fa-check-double mr-1"></i> Sahkan & Aktifkan Diskaun 10% Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 8: PANDUAN PELAJAR (LALUAN BAS & ANTI SCAM) -->
+    <!-- ========================================== -->
+    <div id="infoModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-pinkbrand-200">
+            <div id="infoModalBody"></div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & DATASET -->
+    <!-- ========================================== -->
+    <script>
+        // State Pengurusan
+        let currentCategory = 'rental';
+        let isStudentVerified = false;
+        let studentProfile = null;
+        let largeTextMode = false;
+        let wishlist = JSON.parse(localStorage.getItem('upsirent_wishlist') || '[]');
+        let compareList = [];
+        let isWishlistOnly = false;
+        let geminiApiKey = localStorage.getItem('upsirent_gemini_key') || '';
+
+        // DATASET RUMAH SEWA & HOMESTAY (URLs Bersih & Gambar Beresolusi Tinggi)
+        const properties = [
+            {
+                id: 1,
+                category: 'rental',
+                title: 'Rumah Teres 2 Tingkat Taman Bahtera (Berhadapan Pintu KSAJS)',
+                location: 'Taman Bahtera',
+                campus: 'KSAJS',
+                distance: '600m jalan kaki ke Kampus Sultan Abdul Jalil Shah (KSAJS)',
+                basePrice: 1200,
+                recommendedPax: 6,
+                priceUnit: 'bulan (Sebuah Rumah / Muat 6 Pelajar)',
+                perHeadNote: 'Anggaran RM 200 seorang (Hanya RM 180/seorang dengan Kad Matrik!)',
+                availability: 'Masuk Segera',
+                slotsLeft: '1 Buah Rumah Kosong (Sedia Didiami)',
+                rating: 4.95,
+                reviewCount: 32,
+                badges: ['Jalan Kaki ke KSAJS', 'WiFi Unifi 300Mbps', 'Lengkap Meja Belajar'],
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Taman+Bahtera+Tanjung+Malim',
+                videoTourUrl: 'https://www.youtube.com/results?search_query=Taman+Bahtera+Tanjung+Malim+UPSI',
+                nearbySpots: [
+                    { name: 'Pintu Masuk Utama UPSI (KSAJS)', dist: '5 minit jalan kaki (600m)' },
+                    { name: 'Deretan Kedai Makan Pelajar & Dobi Layan Diri 24 Jam', dist: '2 minit jalan kaki (150m)' },
+                    { name: 'Stesen KTM Tanjung Malim', dist: '5 minit memandu (2.1km)' },
+                    { name: 'Klinik Kesihatan Tanjung Malim & Farmasi', dist: '4 minit memandu (1.5km)' }
+                ],
+                gallery: [
+                    {
+                        label: 'Pandangan Hadapan & Parkir',
+                        url: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Porch berpagar penuh, muat 2 buah kereta dan 4 buah motosikal pelajar dengan selamat.'
+                    },
+                    {
+                        label: 'Ruang Tamu & Santai',
+                        url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Ruang tamu luas lengkap dengan sofa, kipas siling laju, langsir penuh dan modem Unifi 300Mbps.'
+                    },
+                    {
+                        label: 'Bilik Tidur & Ruang Belajar',
+                        url: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Setiap pelajar mendapat katil bujang, tilam tebal 8 inci, almari pakaian berkunci dan meja belajar + kerusi.'
+                    },
+                    {
+                        label: 'Ruang Dapur & Mesin Basuh',
+                        url: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Dapur lengkap dengan peti sejuk 2 pintu, dapur memasak + tong gas, penapis air Coway dan mesin basuh automatik 10kg.'
+                    },
+                    {
+                        label: 'Bilik Air Bersih',
+                        url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80',
+                        caption: '3 bilik air dengan pemanas air (water heater) dan tekanan air kuat.'
+                    }
+                ],
+                sections: [
+                    {
+                        title: 'Bilik Tidur & Kelengkapan Belajar (4 Bilik)',
+                        icon: 'fa-bed',
+                        items: ['6 Set Katil Bujang + Tilam Tebal', '6 Set Meja Belajar & Kerusi Ergonomik', '6 Almari Baju Berkunci Sendiri', 'Soket Plug Tambahan Setiap Katil', 'Kipas Siling & Langsir Blackout']
+                    },
+                    {
+                        title: 'Dapur & Kemudahan Dobi',
+                        icon: 'fa-kitchen-set',
+                        items: ['Mesin Basuh Automatik 10kg', 'Peti Sejuk 2 Pintu Besar', 'Penapis Air Coway (Sejuk & Panas)', 'Dapur Gas 2 Tungku & Rak Pinggan', 'Ampaian Baju Berbumbung di Belakang']
+                    },
+                    {
+                        title: 'Internet, Keselamatan & Parkir',
+                        icon: 'fa-wifi',
+                        items: ['WiFi Unifi 300Mbps (Percuma dalam sewa)', 'Gril Besi Keselamatan Penuh Satu Rumah', 'Lampu Sensor Automatik di Porch', 'Kawasan Kejiranan Pelajar & Keluarga Selamat']
+                    }
+                ],
+                landlord: {
+                    name: 'Encik Razak bin Othman',
+                    phone: '+60 12-554 8890',
+                    whatsapp: '60125548890',
+                    verifiedSince: 'Tuan Rumah Berdaftar Sejak 2021',
+                    responseRate: '99% Balas Dalam 15 Minit'
+                },
+                contract: {
+                    duration: 'Minimum 2 Semester (1 Tahun Akademik / 10–12 Bulan)',
+                    deposit: '1 Bulan Deposit Sekuriti + RM 200 Deposit Utiliti (Boleh bayar 2 kali ansuran untuk pelajar PTPTN)',
+                    utilities: 'Internet Unifi & Servis Coway PERCUMA. Bil Air & Elektrik (TNB) kongsi ikut penggunaan.',
+                    rules: 'Khas untuk kumpulan pelajar perempuan. Dibenarkan memasak. Dilarang merokok.',
+                    cancellation: 'Pulangan deposit 100% dalam masa 7 hari selepas serah kunci tamat semester/latihan industri.'
+                },
+                reviews: [
+                    { name: 'Nurul Izzah (Pelajar ISMP Bahasa Melayu Sem 6)', date: 'Ogos 2026', stars: 5, comment: 'Gambar dalam sistem sama 100% macam rumah sebenar! Setiap orang dapat meja belajar sendiri, tak perlu berebut masa minggu assignment. Encik Razak sangat baik.' },
+                    { name: 'Aina Sofea (Pelajar TESL)', date: 'Mac 2026', stars: 5, comment: 'Kami guna kad matrik dapat diskaun 10%, jimat RM120 sebulan untuk satu rumah. Jalan kaki 5 minit dah sampai pintu KSAJS.' }
+                ]
+            },
+            {
+                id: 2,
+                category: 'rental',
+                title: 'Rumah Teres Proton City (Laluan Utama Bas UPSI ke KSAS)',
+                location: 'Proton City',
+                campus: 'KSAS',
+                distance: '4 minit ke Kampus Sultan Azlan Shah (KSAS) • 80m ke Hentian Bas UPSI',
+                basePrice: 1000,
+                recommendedPax: 5,
+                priceUnit: 'bulan (Sebuah Rumah / Muat 5 Pelajar)',
+                perHeadNote: 'Anggaran RM 200 seorang (Hanya RM 180/seorang dengan Kad Matrik!)',
+                availability: 'Masuk Segera',
+                slotsLeft: 'Sedia Untuk Diduduki Segera',
+                rating: 4.88,
+                reviewCount: 24,
+                badges: ['Hentian Bas UPSI 80m', 'Dekat Tasik Proton City', 'Perjanjian Bertulis'],
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Proton+City+Tanjung+Malim',
+                videoTourUrl: 'https://www.youtube.com/results?search_query=Proton+City+Tanjung+Malim+UPSI',
+                nearbySpots: [
+                    { name: 'Pondok Hentian Bas Shuttle UPSI', dist: '1 minit jalan kaki (80m)' },
+                    { name: 'Kampus Sultan Azlan Shah (KSAS)', dist: '4 minit naik bas / kereta (2.5km)' },
+                    { name: 'Tasik Rekreasi Proton City & Kedai Runcit Speedmart', dist: '3 minit jalan kaki (250m)' }
+                ],
+                gallery: [
+                    {
+                        label: 'Pandangan Luar Rumah',
+                        url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Terletak di lorong tenang berhampiran hentian bas rasmi UPSI.'
+                    },
+                    {
+                        label: 'Ruang Tamu Luas',
+                        url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Ruang tamu dilengkapi meja perbincangan kumpulan dan sofa.'
+                    },
+                    {
+                        label: 'Bilik Tidur Utama',
+                        url: 'https://images.unsplash.com/photo-1540518614846-7ede433c457?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Bilik tidur terang dengan pengudaraan tingkap luar dan meja belajar.'
+                    },
+                    {
+                        label: 'Bahagian Dapur Lengkap',
+                        url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Kabinet dapur kemas bersama peti ais, periuk nasi dan mesin basuh.'
+                    }
+                ],
+                sections: [
+                    {
+                        title: 'Bilik Tidur (3 Bilik Tidur)',
+                        icon: 'fa-bed',
+                        items: ['5 Katil Bujang Besi Kukuh + Tilam', '5 Meja Belajar Kayu & Kerusi', 'Almari Pakaian Setiap Pelajar', 'Kipas Siling Setiap Bilik']
+                    },
+                    {
+                        title: 'Kelengkapan Rumah & Dapur',
+                        icon: 'fa-kitchen-set',
+                        items: ['Mesin Basuh Automatik', 'Peti Sejuk & Dapur Masak', 'Meja Makan 6 Kerusi (Sesuai Buat Group Project)', 'Papan Seterika & Seterika Disediakan']
+                    },
+                    {
+                        title: 'Kelebihan Lokasi & Kontrak',
+                        icon: 'fa-file-shield',
+                        items: ['Kontrak Rasmi Mati Setem (Boleh Guna Mohon Bantuan Zakat/Yayasan)', 'Rumput Halaman Dipotong Percuma Oleh Tuan Rumah Setiap Bulan']
+                    }
+                ],
+                landlord: {
+                    name: 'Puan Rohani binti Salleh',
+                    phone: '+60 19-412 3301',
+                    whatsapp: '60194123301',
+                    verifiedSince: 'Tuan Rumah Sah Sejak 2022',
+                    responseRate: '98% Balas Dalam 20 Minit'
+                },
+                contract: {
+                    duration: 'Minimum 1 Semester (6 Bulan) atau 1 Tahun',
+                    deposit: '1 Bulan Deposit Sewa + RM 150 Deposit Air/Elektrik',
+                    utilities: 'Penyelenggaraan paip, lampu & potong rumput ditanggung sepenuhnya oleh tuan rumah.',
+                    rules: 'Terbuka kepada kumpulan pelajar Lelaki atau Perempuan.',
+                    cancellation: 'Perjanjian sewa rasmi disediakan secara telus tanpa caj tersembunyi.'
+                },
+                reviews: [
+                    { name: 'Amirul Hakim (Pelajar Sains Sukan)', date: 'September 2026', stars: 5, comment: 'Tak ada kenderaan sendiri pun senang sebab bas UPSI lalu betul-betul depan simpang rumah. Puan Rohani pula sangat bertimbang rasa.' }
+                ]
+            },
+            {
+                id: 3,
+                category: 'rental',
+                title: 'Studio Bilik Persendirian Taman Universiti (Non-Sharing)',
+                location: 'Taman Universiti',
+                campus: 'KSAJS',
+                distance: '450m jalan kaki ke Pintu Timur KSAJS & Pekan Tanjung Malim',
+                basePrice: 300,
+                recommendedPax: 1,
+                priceUnit: 'bulan (Bilik Persendirian / Seorang)',
+                perHeadNote: 'Bilik Privasi Seorang (Hanya RM 270/bulan dengan Kad Matrik!)',
+                availability: 'Semester Depan',
+                slotsLeft: 'Tinggal 2 Bilik Kosong Untuk Kemasukan Semester Depan',
+                rating: 4.85,
+                reviewCount: 41,
+                badges: ['Bilik Seorang (Privasi)', 'Bil Air & WiFi Percuma', 'Lengkap Aircond'],
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Taman+Universiti+Tanjung+Malim',
+                videoTourUrl: 'https://www.youtube.com/results?search_query=Taman+Universiti+Tanjung+Malim',
+                nearbySpots: [
+                    { name: 'Pintu Timur UPSI KSAJS', dist: '4 minit jalan kaki (450m)' },
+                    { name: 'Maybank, Agrobank & Pekan Tanjung Malim', dist: '5 minit jalan kaki (600m)' }
+                ],
+                gallery: [
+                    {
+                        label: 'Ruang Dalam Bilik Studio',
+                        url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Bilik seorang yang kemas, tenang dan sesuai untuk fokus ulang kaji atau tulis tesis.'
+                    },
+                    {
+                        label: 'Meja Belajar & Rak Buku',
+                        url: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Meja belajar lebar dengan lampu meja dan capaian WiFi berkelajuan tinggi.'
+                    },
+                    {
+                        label: 'Pantri & Penapis Air Kongsi',
+                        url: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Ruang pantri bersih dengan ketuhar gelombang mikro, penapis air dan mesin basuh.'
+                    }
+                ],
+                sections: [
+                    {
+                        title: 'Kelengkapan Dalam Bilik Persendirian',
+                        icon: 'fa-door-closed',
+                        items: ['Katil Single + Tilam Hotel', 'Meja Belajar Lebar + Lampu Belajar', 'Penghawa Dingin (Aircond) & Kipas', 'Kunci Pintu Pintar (Smart Digital Lock)']
+                    },
+                    {
+                        title: 'Kemudahan Bersama & Keselamatan',
+                        icon: 'fa-shield-halved',
+                        items: ['CCTV 24 Jam di Laluan Koridor & Parkir', 'WiFi Berkelajuan Tinggi & Bil Air PERCUMA', 'Pembersihan Ruang Kongsi Setiap Minggu']
+                    }
+                ],
+                landlord: {
+                    name: 'Encik Chong Wei Ming',
+                    phone: '+60 16-229 7741',
+                    whatsapp: '60162297741',
+                    verifiedSince: 'Tuan Rumah Sah Sejak 2020',
+                    responseRate: '100% Balas Pantas'
+                },
+                contract: {
+                    duration: 'Minimum 1 Semester (6 Bulan)',
+                    deposit: '1 Bulan Deposit Sahaja',
+                    utilities: 'Air & WiFi PERCUMA. Elektrik ikut meter bilik sendiri.',
+                    rules: 'Suasana senyap untuk belajar.',
+                    cancellation: 'Boleh sambung semester ke semester dengan mudah.'
+                },
+                reviews: [
+                    { name: 'Kavitha M. (Pelajar Tahun Akhir)', date: 'Julai 2026', stars: 5, comment: 'Sangat sesuai untuk pelajar yang mahukan privasi seorang untuk siapkan FYP. Bersih dan selamat.' }
+                ]
+            },
+            {
+                id: 4,
+                category: 'homestay',
+                title: 'Pink Blossom Convo Homestay @ Proton City (3 Minit ke Dewan Canselor)',
+                location: 'Proton City',
+                campus: 'KSAS',
+                distance: '3 minit ke Dewan Tuanku Canselor UPSI (Tapak Konvokesyen)',
+                basePrice: 220,
+                recommendedPax: 8,
+                priceUnit: 'malam (Sebuah Rumah 3 Bilik Aircond / Muat 8 Tetamu)',
+                perHeadNote: 'Sesuai Untuk Keluarga Konvokesyen, Hari Pendaftaran & Pelawat Luar',
+                availability: 'Masuk Segera',
+                slotsLeft: 'Tarikh Minggu Konvokesyen & Hujung Minggu Masih Dibuka',
+                rating: 5.0,
+                reviewCount: 49,
+                badges: ['3 Minit ke Dewan Konvo', 'Mesra Warga Emas (Aras Bawah)', 'Seterika Wap Jubah Konvo'],
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Dewan+Tuanku+Canselor+UPSI',
+                videoTourUrl: 'https://www.youtube.com/results?search_query=Dewan+Tuanku+Canselor+UPSI',
+                nearbySpots: [
+                    { name: 'Dewan Tuanku Canselor (Majlis Konvokesyen UPSI)', dist: '3 minit memandu (1.4km)' },
+                    { name: 'Tasik Proton City (Lokasi Bergambar Konvo)', dist: '2 minit memandu (800m)' },
+                    { name: 'Restoran Tomyam & Sarapan Pagi Keluarga', dist: '2 minit memandu (600m)' }
+                ],
+                gallery: [
+                    {
+                        label: 'Ruang Tamu Keluarga',
+                        url: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Ruang tamu berhawa dingin dengan Smart TV 55 inci (Netflix & YouTube) serta sofa keluarga.'
+                    },
+                    {
+                        label: 'Bilik Utama (Katil Queen + Aircond)',
+                        url: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Bilik utama selesa termasuk cermin penuh dan penyangkut khas untuk Jubah Konvokesyen.'
+                    },
+                    {
+                        label: 'Bilik Mesra Ibu Bapa / Warga Emas',
+                        url: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Bilik di aras bawah tanpa tangga — sangat mudah untuk datuk, nenek dan ibu bapa.'
+                    },
+                    {
+                        label: 'Dapur & Meja Makan Keluarga',
+                        url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Dilengkapi penapis air Coway, kopi/teh percuma, peti sejuk dan kelengkapan memasak.'
+                    }
+                ],
+                sections: [
+                    {
+                        title: 'Kemudahan Khas Tetamu Konvokesyen & Keluarga',
+                        icon: 'fa-user-graduate',
+                        items: ['Seterika Wap Berdiri (Mudah gosok Jubah Konvo & Baju Kurung/Batik)', 'Bilik Tidur Aras Bawah Mesra Warga Emas / Kerusi Roda', '3 Bilik Tidur Lengkap Aircond + 2 Toto Tambahan Percuma']
+                    },
+                    {
+                        title: 'Hiburan, Dapur & Parkir',
+                        icon: 'fa-tv',
+                        items: ['Smart TV 55" + Netflix + Unifi 300Mbps', 'Penapis Air Coway, Peti Sejuk, Periuk Nasi & Pinggan Mangkuk', 'Parkir Luas Muat 3 Buah Kereta Keluarga']
+                    }
+                ],
+                landlord: {
+                    name: 'Puan Nurul Huda (Superhost Homestay)',
+                    phone: '+60 11-2345 9980',
+                    whatsapp: '601123459980',
+                    verifiedSince: 'Hos Homestay Sah Sejak 2022',
+                    responseRate: '100% Balas Segera'
+                },
+                contract: {
+                    duration: 'Sewaan Harian (Daftar Masuk: 2:00 Petang | Daftar Keluar: 12:00 Tengah Hari)',
+                    deposit: 'Deposit Tempahan RM 50 Sahaja (Dipulangkan Semasa Check-Out)',
+                    utilities: 'Semua termasuk (Aircond, WiFi, Coway, Tuala Mandi, Sejadah & Telekung).',
+                    rules: 'Homestay Mesra Muslim & Mesra Keluarga Semua Peringkat Umur.',
+                    cancellation: 'Boleh tukar tarikh atau batal percuma sehingga 48 jam sebelum tarikh menginap.'
+                },
+                reviews: [
+                    { name: 'Puan Salmah (Ibu Graduan dari Johor)', date: 'September 2026', stars: 5, comment: 'Anak saya masukkan nombor matrik UPSI terus dapat diskaun 10% jadi RM198 semalam! Rumah sangat bersih, mak saya yang berkerusi roda pun senang sebab ada bilik tingkat bawah.' }
+                ]
+            },
+            {
+                id: 5,
+                category: 'homestay',
+                title: 'Behrang 2020 Family Homestay & Event Villa (Dekat Tol Behrang)',
+                location: 'Behrang 2020',
+                campus: 'KSAJS',
+                distance: '5 minit dari Tol Behrang • 8 minit ke Kampus UPSI & Politeknik (PSAS)',
+                basePrice: 180,
+                recommendedPax: 7,
+                priceUnit: 'malam (Rumah Semi-D Luas / 7 Tetamu)',
+                perHeadNote: 'Sesuai Untuk Pendaftaran Pelajar Baharu, Sukan Kampus & Outsider',
+                availability: 'Masuk Segera',
+                slotsLeft: 'Tempahan Segera Dibuka',
+                rating: 4.9,
+                reviewCount: 27,
+                badges: ['Dekat TF Value-Mart Behrang', 'Parkir 3 Kereta', 'Self Check-In 24 Jam'],
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Bandar+Behrang+2020',
+                videoTourUrl: 'https://www.youtube.com/results?search_query=Bandar+Behrang+2020+Tanjung+Malim',
+                nearbySpots: [
+                    { name: 'Pasaraya TF Value-Mart & KFC Behrang 2020', dist: '2 minit memandu (500m)' },
+                    { name: 'Plaza Tol Behrang (Lebuhraya PLUS)', dist: '5 minit memandu (3km)' },
+                    { name: 'Kampus UPSI Tanjung Malim', dist: '8 minit memandu (6.5km)' }
+                ],
+                gallery: [
+                    {
+                        label: 'Pandangan Hadapan Semi-D',
+                        url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Rumah Semi-D setingkat dengan halaman tepi yang luas dan parkir berpagar.'
+                    },
+                    {
+                        label: 'Ruang Tamu Selesa',
+                        url: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Ruang tamu moden dan terang, sesuai untuk keluarga berehat selepas perjalanan jauh.'
+                    },
+                    {
+                        label: 'Bilik Tidur Keluarga',
+                        url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Katil bersaiz Queen dan Single lengkap dengan cadar bersih setiap kali tetamu baharu masuk.'
+                    }
+                ],
+                sections: [
+                    {
+                        title: 'Ruang Bilik & Keselesaan',
+                        icon: 'fa-bed',
+                        items: ['3 Bilik Tidur & 2 Bilik Air Pemanas Air', 'Semua Bilik Dilengkapi Aircond & Kipas', 'Tuala Bersih, Sabun Mandi & Sejadah Disediakan']
+                    },
+                    {
+                        title: 'Kemudahan Sekitar',
+                        icon: 'fa-cart-shopping',
+                        items: ['2 Minit ke Pasaraya TF Value-Mart, Farmasi, Bank & Kedai Makan', 'Kunci Kotak Pintar (Self Check-In bila-bila masa walaupun sampai lewat malam)']
+                    }
+                ],
+                landlord: {
+                    name: 'Haji Zulkifli bin Ahmad',
+                    phone: '+60 13-390 1122',
+                    whatsapp: '60133901122',
+                    verifiedSince: 'Hos Sah Sejak 2021',
+                    responseRate: '97% Balas Dalam 20 Minit'
+                },
+                contract: {
+                    duration: 'Menginap Harian / Mingguan',
+                    deposit: 'Tiada Deposit Sekuriti Untuk Pemegang Kad Matrik / Surat Tawaran UPSI',
+                    utilities: 'Lengkap WiFi, Aircond, Dapur Masak & Mesin Basuh.',
+                    rules: 'Sangat sesuai untuk keluarga pelajar baharu dan tetamu acara luar.',
+                    cancellation: 'Pembatalan fleksibel.'
+                },
+                reviews: [
+                    { name: 'Encik Roslan (Bapa Pelajar Baharu dari Kelantan)', date: 'Oktober 2026', stars: 5, comment: 'Kami guna surat tawaran UPSI anak untuk daftar masuk, dapat potongan 10% tinggal RM162 semalam. Rumah setingkat sangat mudah untuk warga emas.' }
+                ]
+            }
+        ];
+
+        // DATASET KOMUNITI RAKAN BILIK (ROOMMATE HUB)
+        let roommates = [
+            {
+                id: 101,
+                name: 'Aina & Syuhada',
+                gender: 'Siswi (Perempuan)',
+                faculty: 'Fakulti Bahasa & Komunikasi (FBK) • Sem 3',
+                location: 'Taman Bahtera',
+                budget: 180,
+                desc: 'Mencari 2 orang rakan bilik perempuan Muslimah yang pembersih, tidak merokok, dan rajin study. Rumah sudah ada WiFi & peti ais, jalan kaki ke KSAJS.',
+                phone: '60198877665',
+                tags: ['Pembersih', 'Tak Merokok', 'Ada Motor', 'Jalan Kaki KSAJS']
+            },
+            {
+                id: 102,
+                name: 'Danial & Kumpulan FSSK',
+                gender: 'Siswa (Lelaki)',
+                faculty: 'Fakulti Sains Sukan & Kejurulatihan • Sem 4',
+                location: 'Proton City',
+                budget: 170,
+                desc: 'Ada 1 bilik kosong (muat 2 orang) di Proton City laluan bas KSAS. Mencari siswa yang peramah, aktif sukan atau sama fakulti.',
+                phone: '60172233445',
+                tags: ['Mesra', 'Suka Sukan', 'Dekat Bas KSAS']
+            },
+            {
+                id: 103,
+                name: 'Fatin Nadhirah',
+                gender: 'Siswi (Perempuan)',
+                faculty: 'Fakulti Muzik & Seni Persembahan • Sem 2',
+                location: 'Proton City',
+                budget: 250,
+                desc: 'Mencari bilik single atau kongsi 2 orang yang suasana tenang untuk latihan instrumen muzik. Bajet fleksibel.',
+                phone: '60134455667',
+                tags: ['Bilik Single', 'Suasana Tenang', 'KSAS Proton City']
+            },
+            {
+                id: 104,
+                name: 'Amirul & Hafiz',
+                gender: 'Siswa (Lelaki)',
+                faculty: 'Fakulti Komputeran & Meta-Teknologi • Sem 5',
+                location: 'Behrang 2020',
+                budget: 150,
+                desc: 'Mencari 2 orang housemate untuk sewa rumah semi-D di Behrang 2020. Ada kenderaan sendiri, suka coding & gaming di hujung minggu.',
+                phone: '60189911223',
+                tags: ['Ada Kereta', 'WiFi 300Mbps', 'Bajet Murah']
+            }
+        ];
+
+        // ==========================================
+        // FUNGSI LOGIK & PAPARAN
+        // ==========================================
+
+        function calculatePrice(basePrice) {
+            return isStudentVerified ? Math.round(basePrice * 0.9) : basePrice;
+        }
+
+        function switchCategory(cat) {
+            currentCategory = cat;
+            isWishlistOnly = false;
+            document.getElementById('filterStatusBadge').classList.add('hidden');
+
+            const tabRental = document.getElementById('tab-rental');
+            const tabHomestay = document.getElementById('tab-homestay');
+            const tabRoommate = document.getElementById('tab-roommate');
+            const mobRental = document.getElementById('mob-tab-rental');
+            const mobHomestay = document.getElementById('mob-tab-homestay');
+            const mobRoommate = document.getElementById('mob-tab-roommate');
+            const dockRental = document.getElementById('dock-rental');
+            const dockHomestay = document.getElementById('dock-homestay');
+            const dockRoommate = document.getElementById('dock-roommate');
+            const dockWishlist = document.getElementById('dock-wishlist');
+
+            const inactiveTabClass = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-pinkbrand-600';
+            const activeTabClass = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all pink-gradient text-white shadow-sm';
+            const mobInactive = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-pinkbrand-50 text-slate-600';
+            const mobActive = 'flex-1 py-1.5 rounded-xl text-xs font-bold pink-gradient text-white';
+
+            tabRental.className = cat === 'rental' ? activeTabClass : inactiveTabClass;
+            tabHomestay.className = cat === 'homestay' ? activeTabClass : inactiveTabClass;
+            tabRoommate.className = cat === 'roommate' ? activeTabClass : inactiveTabClass;
+
+            mobRental.className = cat === 'rental' ? mobActive : mobInactive;
+            mobHomestay.className = cat === 'homestay' ? mobActive : mobInactive;
+            mobRoommate.className = cat === 'roommate' ? mobActive : mobInactive;
+
+            if (dockRental) dockRental.className = cat === 'rental' ? 'flex flex-col items-center text-pinkbrand-600' : 'flex flex-col items-center text-slate-400 hover:text-pinkbrand-600';
+            if (dockHomestay) dockHomestay.className = cat === 'homestay' ? 'flex flex-col items-center text-pinkbrand-600' : 'flex flex-col items-center text-slate-400 hover:text-pinkbrand-600';
+            if (dockRoommate) dockRoommate.className = cat === 'roommate' ? 'flex flex-col items-center text-pinkbrand-600' : 'flex flex-col items-center text-slate-400 hover:text-pinkbrand-600';
+            if (dockWishlist) dockWishlist.className = 'flex flex-col items-center text-slate-400 hover:text-pinkbrand-600';
+
+            const listingsGrid = document.getElementById('listingsGrid');
+            const roommateSection = document.getElementById('roommateSection');
+
+            if (cat === 'roommate') {
+                listingsGrid.classList.add('hidden');
+                roommateSection.classList.remove('hidden');
+                document.getElementById('sectionHeading').innerText = 'Papan Kenyataan Rakan Bilik (Roommate)';
+                document.getElementById('resultCount').innerText = 'Hubungi rakan pelajar yang sedang mencari penyewa atau bilik kosong';
+                renderRoommates();
+            } else {
+                listingsGrid.classList.remove('hidden');
+                roommateSection.classList.add('hidden');
+
+                if (cat === 'rental') {
+                    document.getElementById('heroTitle').innerText = 'Cari Rumah Sewa Pelajar Luar Kampus UPSI Dengan Mudah & Selamat';
+                    document.getElementById('heroSubtitle').innerText = 'Lihat gambar setiap ruang bilik satu per satu, semak senarai kelengkapan penuh, baca ulasan penyewa senior, dan hubungi tuan rumah terus.';
+                    document.getElementById('sectionHeading').innerText = 'Senarai Rumah Sewa Pelajar';
+                    document.getElementById('resultCount').innerText = 'Pilihan rumah sewa berhampiran KSAJS, KSAS Proton City & Behrang';
+                } else {
+                    document.getElementById('heroTitle').innerText = 'Homestay & Penginapan Acara UPSI (Konvokesyen & Pendaftaran)';
+                    document.getElementById('heroSubtitle').innerText = 'Penginapan keluarga gaya Airbnb berhampiran Dewan Tuanku Canselor & Kampus UPSI dengan jaminan kebersihan dan keselamatan.';
+                    document.getElementById('sectionHeading').innerText = 'Senarai Homestay & Penginapan Acara';
+                    document.getElementById('resultCount').innerText = 'Sesuai untuk keluarga graduan konvokesyen, hari pendaftaran dan pelawat luar';
+                }
+                renderListings();
+            }
+        }
+
+        function renderListings() {
+            const loc = document.getElementById('locationFilter').value;
+            const avail = document.getElementById('availabilityFilter').value;
+            const maxPrice = parseFloat(document.getElementById('priceFilter').value);
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            const grid = document.getElementById('listingsGrid');
+            grid.innerHTML = '';
+
+            let filtered = properties.filter(item => {
+                if (isWishlistOnly && !wishlist.includes(item.id)) return false;
+                if (!isWishlistOnly && item.category !== currentCategory) return false;
+                if (loc !== 'all' && item.location !== loc) return false;
+                if (avail !== 'all' && item.availability !== avail) return false;
+                if (item.basePrice > maxPrice) return false;
+
+                if (search) {
+                    const matchTitle = item.title.toLowerCase().includes(search);
+                    const matchLoc = item.location.toLowerCase().includes(search);
+                    const matchBadge = item.badges.some(b => b.toLowerCase().includes(search));
+                    const matchSections = item.sections.some(s => s.items.some(it => it.toLowerCase().includes(search)));
+                    if (!matchTitle && !matchLoc && !matchBadge && !matchSections) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-14 text-center bg-white rounded-3xl border border-pinkbrand-100 p-8 shadow-sm">
+                        <div class="w-16 h-16 rounded-full pink-gradient text-white flex items-center justify-center mx-auto mb-3 text-2xl">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-1">Tiada Penginapan Dijumpai</h3>
+                        <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-4">Cuba ubah tapisan harga, lokasi, atau reset carian anda untuk melihat senarai penuh.</p>
+                        <button onclick="resetFilters()" class="px-5 py-2.5 rounded-xl pink-gradient text-white font-bold text-xs sm:text-sm shadow-md">
+                            Reset Penapis Carian
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const finalPrice = calculatePrice(item.basePrice);
+                const isLiked = wishlist.includes(item.id);
+                const isCompared = compareList.includes(item.id);
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-3xl overflow-hidden border border-pinkbrand-100 shadow-sm card-hover flex flex-col justify-between relative';
+                card.innerHTML = `
+                    <div>
+                        <!-- Gambar & Status Atas Gambar -->
+                        <div class="relative h-56 sm:h-64 overflow-hidden group cursor-pointer" onclick="openPropertyModal(${item.id})">
+                            <img src="${item.gallery[0].url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                            
+                            <!-- Badges Overlay -->
+                            <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5">
+                                <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${item.availability === 'Masuk Segera' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'} shadow-md">
+                                    <i class="fa-solid fa-circle-check mr-1 text-[10px]"></i>${item.availability}
+                                </span>
+                                ${item.campus ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-900/80 text-white backdrop-blur-sm w-fit">${item.campus}</span>` : ''}
+                            </div>
+
+                            <!-- Butang Wishlist -->
+                            <button onclick="event.stopPropagation(); toggleWishlist(${item.id})" class="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center ${isLiked ? 'text-pinkbrand-500' : 'text-slate-400'} hover:scale-110 transition shadow-md">
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-base"></i>
+                            </button>
+
+                            <!-- Bar Gambar Airbnb Style Preview -->
+                            <div class="absolute bottom-3 inset-x-3 bg-slate-950/70 backdrop-blur-md rounded-xl p-2 text-white flex items-center justify-between text-xs">
+                                <span class="font-bold truncate"><i class="fa-solid fa-camera mr-1 text-pinkbrand-400"></i>${item.gallery.length} Ruang Bergambar</span>
+                                <span class="text-pinkbrand-300 font-extrabold flex items-center gap-1">
+                                    <i class="fa-solid fa-star text-amber-400"></i> ${item.rating} (${item.reviewCount})
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Maklumat Rumah -->
+                        <div class="p-5">
+                            <div class="flex items-center justify-between text-xs text-slate-500 font-bold mb-1.5">
+                                <span class="text-pinkbrand-600 uppercase tracking-wider">${item.location}</span>
+                                <span class="text-slate-400">• Muat ${item.recommendedPax} Pax</span>
+                            </div>
+
+                            <h3 onclick="openPropertyModal(${item.id})" class="text-base sm:text-lg font-extrabold text-slate-900 leading-snug line-clamp-2 hover:text-pinkbrand-600 cursor-pointer transition mb-2">
+                                ${item.title}
+                            </h3>
+
+                            <p class="text-xs text-slate-500 font-medium mb-3 flex items-center gap-1.5">
+                                <i class="fa-solid fa-route text-pinkbrand-500 shrink-0"></i>
+                                <span class="truncate">${item.distance}</span>
+                            </p>
+
+                            <!-- Lencana Kemudahan -->
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                ${item.badges.map(b => `<span class="px-2.5 py-1 rounded-lg bg-pinkbrand-50 text-pinkbrand-700 text-[11px] font-bold">${b}</span>`).join('')}
+                            </div>
+
+                            <!-- Kotak Harga & Diskaun Pelajar -->
+                            <div class="bg-gradient-to-r from-pinkbrand-50 via-white to-pinkbrand-50/50 p-3.5 rounded-2xl border border-pinkbrand-100">
+                                <div class="flex items-baseline justify-between">
+                                    <div>
+                                        ${isStudentVerified ? `<span class="text-xs line-through text-slate-400 font-bold mr-1">RM ${item.basePrice}</span>` : ''}
+                                        <span class="text-2xl font-extrabold text-pinkbrand-600">RM ${finalPrice}</span>
+                                        <span class="text-xs text-slate-500 font-semibold">/ ${item.priceUnit.split(' ')[0]}</span>
+                                    </div>
+                                    ${isStudentVerified
+                                        ? `<span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[10px] font-extrabold">DISKAUN 10% AKTIF</span>`
+                                        : `<button onclick="openVerifyModal()" class="text-[11px] font-extrabold text-pinkbrand-600 underline hover:text-pinkbrand-700">Pelajar? Jimat RM ${Math.round(item.basePrice * 0.1)}</button>`
+                                    }
+                                </div>
+                                <p class="text-[11px] text-slate-600 font-medium mt-1 truncate">${item.perHeadNote}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Butang Tindakan Bawah Card -->
+                    <div class="px-5 pb-5 pt-1 space-y-2">
+                        <button onclick="openPropertyModal(${item.id})" class="w-full py-2.5 rounded-2xl pink-gradient text-white font-extrabold text-xs sm:text-sm shadow-md shadow-pinkbrand-100 hover:opacity-95 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i> Lihat Gambar Ruang & Info Penuh
+                        </button>
+                        
+                        <!-- Pilihan Bandingkan -->
+                        <div class="flex items-center justify-between text-xs pt-1 px-1">
+                            <label class="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 cursor-pointer text-[11px]">
+                                <input type="checkbox" onchange="toggleCompare(${item.id})" ${isCompared ? 'checked' : ''} class="rounded accent-pinkbrand-500" />
+                                <span>Pilih untuk Banding</span>
+                            </label>
+                            <a href="https://wa.me/${item.landlord.whatsapp}?text=Assalamualaikum%20${encodeURIComponent(item.landlord.name)},%20saya%20berminat%20dengan%20${encodeURIComponent(item.title)}%20di%20UpsiRent-I." target="_blank" class="text-emerald-600 hover:text-emerald-700 font-extrabold flex items-center gap-1 text-[11px]">
+                                <i class="fa-brands fa-whatsapp"></i> Chat Tuan Rumah
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // FUNGSI KOMUNITI RAKAN BILIK (ROOMMATE HUB)
+        // ==========================================
+
+        function renderRoommates() {
+            const grid = document.getElementById('roommateGrid');
+            grid.innerHTML = '';
+
+            roommates.forEach(rm => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-3xl p-5 border border-purple-100 shadow-sm flex flex-col justify-between hover:shadow-md transition';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center font-extrabold text-base shadow-md">
+                                    ${rm.name.slice(0, 2).toUpperCase()}
+                                </div>
+                                <div>
+                                    <h4 class="font-extrabold text-slate-900 text-sm sm:text-base">${rm.name}</h4>
+                                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${rm.gender.includes('Siswi') ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'}">
+                                        ${rm.gender}
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="text-xs font-extrabold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-xl">
+                                RM ${rm.budget} / bln
+                            </span>
+                        </div>
+
+                        <div class="text-xs text-slate-500 font-semibold mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-graduation-cap text-purple-500"></i> ${rm.faculty}
+                        </div>
+
+                        <div class="text-xs text-slate-500 font-semibold mb-3 flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-dot text-pinkbrand-500"></i> Kawasan: <strong>${rm.location}</strong>
+                        </div>
+
+                        <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100 mb-3">
+                            "${rm.desc}"
+                        </p>
+
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            ${rm.tags.map(t => `<span class="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 text-[10px] font-bold">#${t}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/${rm.phone}?text=Assalamualaikum%20${encodeURIComponent(rm.name)},%20saya%20nampak%20iklan%20rakan%20bilik%20anda%20di%20portal%20UpsiRent-I." target="_blank" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs text-center flex items-center justify-center gap-2 shadow-sm transition">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Rakan Bilik
+                    </a>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openPostRoommateModal() {
+            document.getElementById('postRoommateModal').classList.remove('hidden');
+        }
+
+        function closePostRoommateModal() {
+            document.getElementById('postRoommateModal').classList.add('hidden');
+        }
+
+        function submitRoommateAd(e) {
+            e.preventDefault();
+            const newAd = {
+                id: Date.now(),
+                name: document.getElementById('rmName').value.trim(),
+                gender: document.getElementById('rmGender').value,
+                faculty: document.getElementById('rmFaculty').value.trim(),
+                location: document.getElementById('rmLocation').value,
+                budget: parseFloat(document.getElementById('rmBudget').value) || 180,
+                desc: document.getElementById('rmDesc').value.trim(),
+                phone: document.getElementById('rmPhone').value.trim().replace(/[^0-9]/g, ''),
+                tags: ['Pelajar Baharu', 'Iklan Terkini']
+            };
+
+            roommates.unshift(newAd);
+            closePostRoommateModal();
+            renderRoommates();
+            showToast('Iklan rakan bilik anda berjaya disiarkan secara langsung!', 'success');
+        }
+
+        // ==========================================
+        // FUNGSI AIRBNB ROOM-BY-ROOM MODAL
+        // ==========================================
+
+        function openPropertyModal(id) {
+            const item = properties.find(p => p.id === id);
+            if (!item) return;
+
+            const finalPrice = calculatePrice(item.basePrice);
+            const studentPrice = Math.round(item.basePrice * 0.9);
+            const perPersonPrice = Math.round(finalPrice / item.recommendedPax);
+
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <!-- Header Modal Sticky -->
+                <div class="sticky top-0 z-20 bg-white/95 backdrop-blur-md px-6 py-4 border-b border-pinkbrand-100 flex items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-pinkbrand-600">${item.location} • ${item.availability}</span>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 line-clamp-1">${item.title}</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleWishlist(${item.id})" class="px-3 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-pinkbrand-50 font-bold text-xs flex items-center gap-1.5">
+                            <i class="${wishlist.includes(item.id) ? 'fa-solid text-pinkbrand-500' : 'fa-regular'} fa-heart"></i>
+                            <span class="hidden sm:inline">Simpan</span>
+                        </button>
+                        <button onclick="closePropertyModal()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-pinkbrand-50 text-slate-700 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-xmark text-base"></i> Tutup
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-5 sm:p-8 space-y-8">
+                    <!-- 1. GALERI INTERAKTIF SETIAP RUANG (AIRBNB ROOM-BY-ROOM TOUR) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-camera-retro text-pinkbrand-500"></i> Galeri Gambar Setiap Ruang (Klik Untuk Lihat Bilik)
+                            </h3>
+                            <span class="text-xs font-bold text-pinkbrand-600 bg-pinkbrand-50 px-3 py-1 rounded-full">
+                                ${item.gallery.length} Ruang Lengkap
+                            </span>
+                        </div>
+
+                        <!-- Gambar Utama Terpilih -->
+                        <div class="relative rounded-3xl overflow-hidden h-64 sm:h-96 border border-pinkbrand-100 shadow-md bg-slate-900">
+                            <img id="activeGalleryImg" src="${item.gallery[0].url}" alt="${item.gallery[0].label}" class="w-full h-full object-cover" />
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 via-slate-900/60 to-transparent p-4 sm:p-6 text-white">
+                                <span id="activeGalleryLabel" class="inline-block px-3 py-1 rounded-lg pink-gradient text-xs font-extrabold mb-1.5">
+                                    1 / ${item.gallery.length} • ${item.gallery[0].label}
+                                </span>
+                                <p id="activeGalleryCaption" class="text-xs sm:text-sm text-pink-50 font-medium">${item.gallery[0].caption}</p>
+                            </div>
+                        </div>
+
+                        <!-- Barisan Thumbnail Ruang -->
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mt-3">
+                            ${item.gallery.map((g, idx) => `
+                                <button onclick="selectGalleryImage(${item.id}, ${idx})" id="thumb-${idx}" class="text-left rounded-2xl overflow-hidden border border-slate-200 bg-white p-1.5 transition ${idx === 0 ? 'thumb-active' : 'opacity-80 hover:opacity-100'}">
+                                    <img src="${g.url}" alt="${g.label}" class="w-full h-16 object-cover rounded-xl mb-1" />
+                                    <div class="text-[11px] font-extrabold text-slate-800 truncate px-1">${idx + 1}. ${g.label}</div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 2. APA YANG ADA DI SETIAP BAHAGIAN RUMAH (INVENTORI LENGKAP) -->
+                    <div>
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-pinkbrand-500"></i> Senarai Lengkap Apa Yang Ada Di Setiap Ruang
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${item.sections.map(sec => `
+                                <div class="bg-pinkbrand-50/50 border border-pinkbrand-100 rounded-2xl p-4">
+                                    <div class="flex items-center gap-2.5 mb-3">
+                                        <div class="w-9 h-9 rounded-xl pink-gradient text-white flex items-center justify-center text-sm">
+                                            <i class="fa-solid ${sec.icon}"></i>
+                                        </div>
+                                        <h4 class="font-extrabold text-sm text-slate-900">${sec.title}</h4>
+                                    </div>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                                        ${sec.items.map(i => `
+                                            <li class="flex items-start gap-2">
+                                                <i class="fa-solid fa-circle-check text-emerald-500 mt-1 shrink-0"></i>
+                                                <span>${i}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 3. LOKASI BERDEKATAN & KALKULATOR HARGA -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Kemudahan Berdekatan -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+                            <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-link text-pinkbrand-500"></i> Pautan Pantas & Jarak Kemudahan
+                            </h3>
+                            <div class="space-y-2 mb-4">
+                                ${item.nearbySpots.map(spot => `
+                                    <div class="flex items-center justify-between text-xs sm:text-sm bg-slate-50 px-3.5 py-2.5 rounded-xl">
+                                        <span class="font-semibold text-slate-700"><i class="fa-solid fa-location-dot text-pinkbrand-500 mr-2"></i>${spot.name}</span>
+                                        <span class="font-bold text-pinkbrand-600">${spot.dist}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <a href="${item.mapUrl}" target="_blank" class="py-2.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-map-location-dot text-pinkbrand-300"></i> Buka di Google Maps
+                                </a>
+                                <a href="${item.videoTourUrl}" target="_blank" class="py-2.5 px-3.5 rounded-xl bg-pinkbrand-50 hover:bg-pinkbrand-100 text-pinkbrand-700 border border-pinkbrand-200 text-xs font-bold flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-video"></i> Video Sekitar Kawasan
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Kiraan Harga & Diskaun Pelajar 10% -->
+                        <div class="bg-gradient-to-br from-pinkbrand-50 to-white rounded-2xl p-5 border-2 border-pinkbrand-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-extrabold uppercase text-pinkbrand-600">Kiraan Harga & Diskaun Pelajar</span>
+                                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-extrabold">${item.slotsLeft}</span>
+                            </div>
+
+                            <div class="flex items-baseline gap-2 mb-3">
+                                <span class="text-3xl font-extrabold text-pinkbrand-600">RM ${finalPrice}</span>
+                                <span class="text-xs text-slate-600 font-semibold">/ ${item.priceUnit}</span>
+                            </div>
+
+                            <div class="bg-white p-3.5 rounded-xl border border-pinkbrand-100 mb-3 text-xs sm:text-sm space-y-1.5">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Harga Awam / Bukan Pelajar:</span>
+                                    <span class="font-bold text-slate-700">RM ${item.basePrice}</span>
+                                </div>
+                                <div class="flex justify-between text-emerald-700 font-extrabold">
+                                    <span>Harga Pelajar Sah (Diskaun 10%):</span>
+                                    <span>RM ${studentPrice} (Jimat RM ${item.basePrice - studentPrice}!)</span>
+                                </div>
+                                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="font-bold text-slate-800">Anggaran Kongsi (${item.recommendedPax} Orang):</span>
+                                    <span class="text-base font-extrabold text-pinkbrand-600">RM ${perPersonPrice} / seorang</span>
+                                </div>
+                            </div>
+
+                            ${!isStudentVerified ? `
+                                <button onclick="closePropertyModal(); openVerifyModal();" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-sm transition">
+                                    <i class="fa-solid fa-id-card mr-1"></i> Sahkan Kad Matrik Untuk Tebus Diskaun 10%
+                                </button>
+                            ` : `
+                                <div class="text-xs font-bold text-emerald-700 text-center py-2 bg-emerald-50 rounded-xl">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> Diskaun Pelajar 10% Anda Sedang Aktif!
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- 4. MAKLUMAT KONTRAK & HUBUNGI TUAN RUMAH -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Kontrak Telus -->
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                            <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-file-contract text-pinkbrand-500"></i> Maklumat Kontrak & Syarat Sewaan
+                            </h3>
+                            <ul class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+                                <li><strong><i class="fa-solid fa-calendar-days text-pinkbrand-500 mr-2"></i>Tempoh Kontrak:</strong> ${item.contract.duration}</li>
+                                <li><strong><i class="fa-solid fa-money-bill-transfer text-pinkbrand-500 mr-2"></i>Deposit:</strong> ${item.contract.deposit}</li>
+                                <li><strong><i class="fa-solid fa-bolt text-pinkbrand-500 mr-2"></i>Bil & Utiliti:</strong> ${item.contract.utilities}</li>
+                                <li><strong><i class="fa-solid fa-house-lock text-pinkbrand-500 mr-2"></i>Peraturan:</strong> ${item.contract.rules}</li>
+                                <li><strong><i class="fa-solid fa-shield-heart text-pinkbrand-500 mr-2"></i>Jaminan Deposit:</strong> ${item.contract.cancellation}</li>
+                            </ul>
+                        </div>
+
+                        <!-- Hubungi Tuan Rumah -->
+                        <div class="bg-white p-5 rounded-2xl border-2 border-pinkbrand-100 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-phone-volume text-pinkbrand-500"></i> Maklumat Tuan Rumah / Hos
+                                </h3>
+                                <div class="space-y-2 text-xs sm:text-sm text-slate-700">
+                                    <p><strong>Nama:</strong> ${item.landlord.name}</p>
+                                    <p><strong>No. Telefon:</strong> ${item.landlord.phone}</p>
+                                    <p><strong>Pengesahan:</strong> <span class="text-emerald-600 font-bold">${item.landlord.verifiedSince}</span></p>
+                                    <p><strong>Maklum Balas:</strong> ${item.landlord.responseRate}</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4">
+                                <a href="https://wa.me/${item.landlord.whatsapp}?text=Assalamualaikum%20/%20Salam%20${encodeURIComponent(item.landlord.name)},%20saya%20berminat%20dengan%20${encodeURIComponent(item.title)}%20di%20portal%20UpsiRent-I." target="_blank" class="py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Tuan Rumah
+                                </a>
+                                <a href="tel:${item.landlord.phone}" class="py-3 px-4 rounded-xl pink-gradient text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-phone"></i> Hubungi Terus
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. ULASAN PENYEWA TERDAHULU -->
+                    <div>
+                        <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-400"></i> Ulasan & Rating Penyewa Terdahulu (${item.rating} / 5.0)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${item.reviews.map(r => `
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="font-extrabold text-sm text-slate-900">${r.name}</span>
+                                        <span class="text-xs font-bold text-amber-500"><i class="fa-solid fa-star"></i> ${r.stars}.0 • <span class="text-slate-400 font-normal">${r.date}</span></span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">"${r.comment}"</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('propertyModal').classList.remove('hidden');
+        }
+
+        function selectGalleryImage(propId, index) {
+            const item = properties.find(p => p.id === propId);
+            if (!item) return;
+            const g = item.gallery[index];
+            document.getElementById('activeGalleryImg').src = g.url;
+            document.getElementById('activeGalleryLabel').innerText = `${index + 1} / ${item.gallery.length} • ${g.label}`;
+            document.getElementById('activeGalleryCaption').innerText = g.caption;
+
+            item.gallery.forEach((_, idx) => {
+                const btn = document.getElementById(`thumb-${idx}`);
+                if (btn) {
+                    btn.className = `text-left rounded-2xl overflow-hidden border border-slate-200 bg-white p-1.5 transition ${idx === index ? 'thumb-active' : 'opacity-80 hover:opacity-100'}`;
+                }
+            });
+        }
+
+        function closePropertyModal() {
+            document.getElementById('propertyModal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // FUNGSI GEMINI AI ASSISTANT (HACKATHON CORE)
+        // ==========================================
+
+        function openGeminiModal() {
+            document.getElementById('geminiModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('aiUserInput').focus();
+            }, 100);
+        }
+
+        function closeGeminiModal() {
+            document.getElementById('geminiModal').classList.add('hidden');
+        }
+
+        function toggleApiKeyInput() {
+            const c = document.getElementById('apiKeyContainer');
+            c.classList.toggle('hidden');
+            if (geminiApiKey) {
+                document.getElementById('geminiApiKeyInput').value = geminiApiKey;
+            }
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('geminiApiKeyInput').value.trim();
+            geminiApiKey = key;
+            localStorage.setItem('upsirent_gemini_key', key);
+            document.getElementById('aiModeLabel').innerText = key ? 'Live Google Gemini API (Aktif)' : 'Pintar Tempatan (Sedia Digunakan)';
+            document.getElementById('apiKeyContainer').classList.add('hidden');
+            showToast(key ? 'Kunci Gemini API disimpan!' : 'Menggunakan mod pintar tempatan.', 'info');
+        }
+
+        function triggerAiWithQuery(query) {
+            openGeminiModal();
+            document.getElementById('aiUserInput').value = query;
+            sendAiMessage();
+        }
+
+        function sendQuickPrompt(text) {
+            document.getElementById('aiUserInput').value = text;
+            sendAiMessage();
+        }
+
+        function handleAiInputKey(e) {
+            if (e.key === 'Enter') {
+                sendAiMessage();
+            }
+        }
+
+        async function sendAiMessage() {
+            const input = document.getElementById('aiUserInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const chatBox = document.getElementById('aiChatBox');
+
+            // Render soalan pengguna
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex items-start justify-end gap-2.5';
+            userMsg.innerHTML = `
+                <div class="bg-indigo-600 text-white p-3.5 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] text-xs sm:text-sm">
+                    ${query}
+                </div>
+            `;
+            chatBox.appendChild(userMsg);
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Render Loading AI
+            const loadingMsg = document.createElement('div');
+            loadingMsg.id = 'aiTypingIndicator';
+            loadingMsg.className = 'flex items-start gap-2.5';
+            loadingMsg.innerHTML = `
+                <div class="w-8 h-8 rounded-xl ai-gradient text-white flex items-center justify-center shrink-0 text-xs">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm text-slate-500 text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-500"></i>
+                    <span>Gemini AI sedang menganalisis pangkalan data sewaan UPSI...</span>
+                </div>
+            `;
+            chatBox.appendChild(loadingMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                let responseText = '';
+
+                if (geminiApiKey) {
+                    // Panggilan Live API jika ada key
+                    responseText = await callLiveGeminiApi(query);
+                } else {
+                    // Panggilan Enjin Pintar Tempatan
+                    await new Promise(r => setTimeout(r, 600));
+                    responseText = generateLocalAiResponse(query);
+                }
+
+                const indicator = document.getElementById('aiTypingIndicator');
+                if (indicator) indicator.remove();
+
+                const aiReply = document.createElement('div');
+                aiReply.className = 'flex items-start gap-2.5';
+                aiReply.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl ai-gradient text-white flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[85%] text-slate-700 leading-relaxed text-xs sm:text-sm space-y-2">
+                        ${responseText}
+                    </div>
+                `;
+                chatBox.appendChild(aiReply);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            } catch (err) {
+                const indicator = document.getElementById('aiTypingIndicator');
+                if (indicator) indicator.remove();
+
+                const errorReply = document.createElement('div');
+                errorReply.className = 'flex items-start gap-2.5';
+                errorReply.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-red-500 text-white flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="bg-white p-3.5 rounded-2xl border border-red-200 text-red-600 text-xs max-w-[85%]">
+                        Maaf, berlaku ralat: ${err.message}. Sistem bertukar ke enjin tempatan secara automatik.
+                    </div>
+                `;
+                chatBox.appendChild(errorReply);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        async function callLiveGeminiApi(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+            const systemContext = `Anda ialah Penasihat Sewa Pintar UpsiRent-I khusus untuk mahasiswa Universiti Pendidikan Sultan Idris (UPSI) di Tanjung Malim dan Proton City. Pangkalan data:
+1. Rumah Teres Taman Bahtera (KSAJS): RM1200/bln (RM200/org, RM180 dgn diskaun pelajar), jalan kaki ke KSAJS, ada WiFi Unifi.
+2. Rumah Teres Proton City (KSAS): RM1000/bln (RM200/org), 80m ke pondok bas UPSI, dekat tasik.
+3. Studio Taman Universiti: RM300/bln (RM270 dgn kad matrik), bilik single privasi KSAJS.
+4. Pink Blossom Convo Homestay Proton City: RM220/mlm (8 pax), 3 min ke Dewan Tuanku Canselor.
+5. Behrang 2020 Villa Homestay: RM180/mlm.
+Beri jawapan yang sangat mesra mahasiswa, praktikal, dan sertakan tips elak scam sewa.`;
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: systemContext },
+                            { text: prompt }
+                        ]
+                    }]
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error(`Status HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, tiada jawapan diterima daripada Gemini.';
+            return formatMarkdownToHtml(text);
+        }
+
+        function generateLocalAiResponse(query) {
+            const q = query.toLowerCase();
+
+            // Senario 1: Semakan Kontrak & Red Flag Scam
+            if (q.includes('scam') || q.includes('red flag') || q.includes('kontrak') || q.includes('deposit') || q.includes('klausa')) {
+                return `
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-[11px] font-bold">
+                            <i class="fa-solid fa-shield-virus mr-1"></i> Analisis Keselamatan Kontrak Gemini AI
+                        </span>
+                        <p class="font-bold text-slate-800">Senarai 'Red Flag' Sewa Rumah di Tanjung Malim:</p>
+                        <ul class="space-y-1.5 list-disc pl-4 text-slate-600 text-xs">
+                            <li><strong class="text-rose-600">Bahaya:</strong> Tuan rumah minta deposit penuh sebelum anda tengok rumah atau kunci fizikal (Selalunya scammer Facebook/Telegram).</li>
+                            <li><strong class="text-rose-600">Klausa Berat Sebelah:</strong> Tiada peruntukan pemulangan deposit utiliti selepas tamat sewa.</li>
+                            <li><strong class="text-emerald-700">Amalan Selamat:</strong> Di <strong>UpsiRent-I</strong>, semua 5 tuan rumah kami telah disahkan identiti fizikal sejak 2020-2022 dan deposit adalah standard 1 bulan + utiliti.</li>
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Senario 2: Cadangan Rumah KSAS / Proton City
+            if (q.includes('ksas') || q.includes('proton city')) {
+                return `
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-800 text-[11px] font-bold">
+                            <i class="fa-solid fa-house-chimney mr-1"></i> Cadangan Gemini untuk Kampus KSAS
+                        </span>
+                        <p>Untuk pelajar <strong>Kampus Sultan Azlan Shah (KSAS)</strong> Proton City, rumah paling tepat ialah:</p>
+                        <div class="p-3 bg-pinkbrand-50 rounded-xl border border-pinkbrand-200">
+                            <div class="font-extrabold text-slate-900 text-sm">Rumah Teres Proton City (Laluan Bas UPSI)</div>
+                            <div class="text-pinkbrand-600 font-extrabold text-xs">RM 1,000 / bulan (RM 180 seorang dengan Kad Matrik)</div>
+                            <div class="text-[11px] text-slate-600 mt-1">Hanya 80m ke pondok bas shuttle UPSI percuma, muat 5 orang dan dekat Tasik Proton City.</div>
+                            <button onclick="closeGeminiModal(); openPropertyModal(2);" class="mt-2 px-3 py-1 bg-pinkbrand-600 text-white rounded-lg text-xs font-bold hover:bg-pinkbrand-700">
+                                Buka Rumah Ini Sekarang
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Senario 3: Cadangan KSAJS / Jalan Kaki / Murah
+            if (q.includes('ksajs') || q.includes('jalan kaki') || q.includes('bahtera') || q.includes('universiti')) {
+                return `
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-bold">
+                            <i class="fa-solid fa-person-walking mr-1"></i> Cadangan Jalan Kaki ke KSAJS
+                        </span>
+                        <p>Untuk pelajar <strong>Kampus Sultan Abdul Jalil Shah (KSAJS)</strong>, anda ada 2 pilihan popular:</p>
+                        <div class="space-y-2">
+                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                                <strong class="text-slate-900">1. Teres Taman Bahtera (RM 180/orang):</strong> 600m jalan kaki terus ke pintu utama, ada WiFi 300Mbps.
+                                <button onclick="closeGeminiModal(); openPropertyModal(1);" class="block mt-1 text-pinkbrand-600 font-bold underline text-xs">Tengok Gambar Ruang &gt;</button>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                                <strong class="text-slate-900">2. Studio Taman Universiti (RM 270/orang):</strong> Bilik single privasi 450m dari Pintu Timur KSAJS.
+                                <button onclick="closeGeminiModal(); openPropertyModal(3);" class="block mt-1 text-pinkbrand-600 font-bold underline text-xs">Tengok Gambar Ruang &gt;</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Senario 4: Kira Kos Sara Hidup Pelajar UPSI
+            if (q.includes('kos') || q.includes('hidup') || q.includes('bajet') || q.includes('makan') || q.includes('bulan')) {
+                return `
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-1 rounded-md bg-purple-100 text-purple-800 text-[11px] font-bold">
+                            <i class="fa-solid fa-coins mr-1"></i> Anggaran Kos Sara Hidup Pelajar UPSI (Sebulan)
+                        </span>
+                        <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-1.5 text-xs">
+                            <div class="flex justify-between"><span>Sewa Rumah (Kongsi):</span> <strong>RM 180 - RM 220</strong></div>
+                            <div class="flex justify-between"><span>Utiliti & WiFi:</span> <strong>RM 35 - RM 50</strong></div>
+                            <div class="flex justify-between"><span>Makanan (Kedai Tomyam/Kafetaria):</span> <strong>RM 400 - RM 500</strong></div>
+                            <div class="flex justify-between"><span>Bas Shuttle UPSI:</span> <strong class="text-emerald-600">PERCUMA</strong></div>
+                            <div class="pt-2 border-t border-slate-200 flex justify-between font-extrabold text-pinkbrand-600 text-sm">
+                                <span>Jumlah Anggaran:</span> <span>RM 615 - RM 770 / bulan</span>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-500">Gunakan Kad Matrik di portal ini untuk jimat 10% sewa setiap bulan!</p>
+                    </div>
+                `;
+            }
+
+            // Default Friendly Response
+            return `
+                <div class="space-y-2">
+                    <p>Terima kasih atas soalan anda! Di UpsiRent-I, semua rumah sewa kami terletak dalam lingkungan <strong>10 minit ke kampus UPSI</strong> (KSAJS atau KSAS Proton City).</p>
+                    <p>Adakah anda ingin saya:</p>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="sendQuickPrompt('Cadangkan rumah perempuan bawah RM200')" class="px-2.5 py-1 rounded-lg bg-pinkbrand-50 text-pinkbrand-700 font-bold text-xs border border-pinkbrand-200">
+                            Cari Rumah Siswi
+                        </button>
+                        <button onclick="sendQuickPrompt('Saya nak homestay dekat Dewan Canselor')" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs border border-indigo-200">
+                            Homestay Konvo
+                        </button>
+                        <button onclick="sendQuickPrompt('Semak kontrak sewa saya')" class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 font-bold text-xs border border-amber-200">
+                            Semak Kontrak
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatMarkdownToHtml(md) {
+            return md
+                .replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>')
+                .replace(/\\*(.*?)\\*/g, '<em>$1</em>')
+                .replace(/^### (.*$)/gim, '<h4 class="font-bold text-slate-900 mt-2 mb-1">$1</h4>')
+                .replace(/^\\* (.*$)/gim, '<li class="ml-4 list-disc">$1</li>')
+                .replace(/\\n/g, '<br />');
+        }
+
+        // ==========================================
+        // FUNGSI KALKULATOR KONGSI SEWA
+        // ==========================================
+
+        function openCalculatorModal() {
+            document.getElementById('calculatorModal').classList.remove('hidden');
+            updateCalculator();
+        }
+
+        function closeCalculatorModal() {
+            document.getElementById('calculatorModal').classList.add('hidden');
+        }
+
+        function updateCalculator() {
+            const rent = parseFloat(document.getElementById('calcRentInput').value) || 1200;
+            const pax = parseInt(document.getElementById('calcPaxInput').value) || 6;
+
+            document.getElementById('calcRentDisplay').innerText = `RM ${rent.toLocaleString()}`;
+            document.getElementById('calcPaxDisplay').innerText = `${pax} Orang`;
+
+            let utilities = 0;
+            if (document.getElementById('calcUtilWifi').checked) utilities += 139;
+            if (document.getElementById('calcUtilElec').checked) utilities += 90;
+            if (document.getElementById('calcUtilWater').checked) utilities += 25;
+            if (document.getElementById('calcUtilCoway').checked) utilities += 65;
+
+            const total = rent + utilities;
+            const perPerson = Math.round(total / pax);
+            const studentPerPerson = Math.round((rent * 0.9 + utilities) / pax);
+
+            document.getElementById('calcPerPersonDisplay').innerHTML = `RM ${perPerson} <span class="text-xs text-slate-500 font-semibold">/ seorang</span>`;
+            document.getElementById('calcStudentDiscountNotice').innerHTML = `
+                Pelajar UPSI dengan Kad Matrik: <strong>RM ${studentPerPerson} / seorang</strong> (Jimat RM ${perPerson - studentPerPerson} setiap bulan!)
+            `;
+        }
+
+        function shareCalcResultToWhatsApp() {
+            const rent = document.getElementById('calcRentInput').value;
+            const pax = document.getElementById('calcPaxInput').value;
+            const perPerson = document.getElementById('calcPerPersonDisplay').innerText;
+
+            const text = `Salam kawan-kawan! Ini anggaran sewa rumah kita ikut kiraan UpsiRent-I:%0A%0A🏠 *Sewa Rumah:* RM ${rent} / bulan%0A👥 *Bilangan Rakan:* ${pax} orang%0A💰 *Anggaran Bayaran Setiap Orang (termasuk utiliti):* ${perPerson}%0A%0ASemak senarai rumah lengkap di UpsiRent-I (ada diskaun 10% pelajar UPSI)!`;
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        // ==========================================
+        // FUNGSI PERBANDINGAN RUMAH (SIDE-BY-SIDE)
+        // ==========================================
+
+        function toggleCompare(id) {
+            const idx = compareList.indexOf(id);
+            if (idx === -1) {
+                if (compareList.length >= 3) {
+                    showToast('Maksimum 3 buah rumah boleh dibandingkan serentak.', 'info');
+                    renderListings();
+                    return;
+                }
+                compareList.push(id);
+                showToast('Ditambah ke senarai perbandingan.', 'success');
+            } else {
+                compareList.splice(idx, 1);
+            }
+
+            updateCompareBar();
+        }
+
+        function updateCompareBar() {
+            const bar = document.getElementById('compareBar');
+            const count = document.getElementById('compareCount');
+            if (compareList.length >= 2) {
+                count.innerText = compareList.length;
+                bar.classList.remove('hidden');
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+
+        function clearComparison() {
+            compareList = [];
+            updateCompareBar();
+            renderListings();
+        }
+
+        function openCompareModal() {
+            if (compareList.length < 2) return;
+            const selected = properties.filter(p => compareList.includes(p.id));
+
+            const container = document.getElementById('compareModalContent');
+            container.innerHTML = `
+                <div class="grid grid-cols-${selected.length} gap-4 min-w-[600px] text-xs sm:text-sm">
+                    ${selected.map(item => `
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <img src="${item.gallery[0].url}" alt="${item.title}" class="w-full h-32 object-cover rounded-xl" />
+                            <h4 class="font-extrabold text-slate-900 text-sm line-clamp-2">${item.title}</h4>
+                            
+                            <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                                <div class="text-xs text-slate-500 font-bold">Harga Biasa:</div>
+                                <div class="text-base font-extrabold text-pinkbrand-600">RM ${item.basePrice} / ${item.priceUnit.split(' ')[0]}</div>
+                                <div class="text-xs text-emerald-700 font-bold mt-1">Diskaun Pelajar 10%: RM ${Math.round(item.basePrice * 0.9)}</div>
+                            </div>
+
+                            <div class="space-y-1.5 text-xs text-slate-600">
+                                <p><strong>Lokasi:</strong> ${item.location}</p>
+                                <p><strong>Jarak:</strong> ${item.distance}</p>
+                                <p><strong>Muat:</strong> ${item.recommendedPax} Pax</p>
+                                <p><strong>Status:</strong> ${item.availability}</p>
+                                <p><strong>Kontrak:</strong> ${item.contract.duration}</p>
+                            </div>
+
+                            <button onclick="closeCompareModal(); openPropertyModal(${item.id});" class="w-full py-2 rounded-xl pink-gradient text-white font-extrabold text-xs shadow-sm">
+                                Lihat Penuh
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('compareModal').classList.remove('hidden');
+        }
+
+        function closeCompareModal() {
+            document.getElementById('compareModal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // FUNGSI WISHLIST (KEGEMARAN SAYA)
+        // ==========================================
+
+        function toggleWishlist(id) {
+            const idx = wishlist.indexOf(id);
+            if (idx === -1) {
+                wishlist.push(id);
+                showToast('Rumah disimpan ke senarai kegemaran!', 'success');
+            } else {
+                wishlist.splice(idx, 1);
+                showToast('Dikeluarkan daripada senarai kegemaran.', 'info');
+            }
+            localStorage.setItem('upsirent_wishlist', JSON.stringify(wishlist));
+            updateWishlistBadge();
+            renderListings();
+        }
+
+        function updateWishlistBadge() {
+            document.getElementById('wishlistCountBadge').innerText = wishlist.length;
+        }
+
+        function toggleWishlistView() {
+            isWishlistOnly = !isWishlistOnly;
+            const badge = document.getElementById('filterStatusBadge');
+            const dockWishlist = document.getElementById('dock-wishlist');
+
+            if (isWishlistOnly) {
+                badge.innerText = 'Kegemaran Saya Ditapis';
+                badge.classList.remove('hidden');
+                document.getElementById('sectionHeading').innerText = 'Rumah Kegemaran Saya';
+                if (dockWishlist) dockWishlist.className = 'flex flex-col items-center text-pinkbrand-600';
+            } else {
+                badge.classList.add('hidden');
+                document.getElementById('sectionHeading').innerText = currentCategory === 'rental' ? 'Senarai Rumah Sewa Pelajar' : 'Senarai Homestay & Acara';
+                if (dockWishlist) dockWishlist.className = 'flex flex-col items-center text-slate-400 hover:text-pinkbrand-600';
+            }
+            renderListings();
+        }
+
+        // ==========================================
+        // FUNGSI PORTAL TUAN RUMAH
+        // ==========================================
+
+        function openLandlordModal() {
+            document.getElementById('landlordModal').classList.remove('hidden');
+        }
+
+        function closeLandlordModal() {
+            document.getElementById('landlordModal').classList.add('hidden');
+        }
+
+        function submitLandlordProperty(e) {
+            e.preventDefault();
+            const newProp = {
+                id: Date.now(),
+                category: document.getElementById('llCategory').value,
+                title: document.getElementById('llTitle').value.trim(),
+                location: document.getElementById('llLocation').value,
+                distance: 'Sekitar 5-8 minit ke kampus UPSI',
+                basePrice: parseFloat(document.getElementById('llPrice').value) || 1000,
+                recommendedPax: parseInt(document.getElementById('llPax').value) || 5,
+                priceUnit: document.getElementById('llCategory').value === 'rental' ? 'bulan (Sebuah Rumah)' : 'malam (Homestay)',
+                perHeadNote: 'Iklan Terbaharu Disahkan Tuan Rumah',
+                availability: 'Masuk Segera',
+                slotsLeft: 'Sedia Diduduki',
+                rating: 5.0,
+                reviewCount: 1,
+                badges: ['Iklan Terbaharu', 'Tuan Rumah Sah'],
+                mapUrl: 'https://maps.google.com',
+                videoTourUrl: 'https://youtube.com',
+                nearbySpots: [
+                    { name: 'Kampus UPSI Tanjung Malim', dist: '5-8 minit' }
+                ],
+                gallery: [
+                    {
+                        label: 'Pandangan Rumah',
+                        url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1000&q=80',
+                        caption: 'Rumah sewa/homestay terbaharu yang didaftarkan di portal UpsiRent-I.'
+                    }
+                ],
+                sections: [
+                    {
+                        title: 'Kemudahan Asas',
+                        icon: 'fa-house',
+                        items: ['Kelengkapan asas lengkap', 'Hubungi tuan rumah untuk lawatan tapak fizikal']
+                    }
+                ],
+                landlord: {
+                    name: document.getElementById('llName').value.trim(),
+                    phone: document.getElementById('llPhone').value.trim(),
+                    whatsapp: document.getElementById('llPhone').value.trim().replace(/[^0-9]/g, ''),
+                    verifiedSince: 'Tuan Rumah Baharu Berdaftar 2026',
+                    responseRate: '100% Pantas'
+                },
+                contract: {
+                    duration: 'Boleh dirunding bersama tuan rumah',
+                    deposit: '1 Bulan Deposit Sahaja',
+                    utilities: 'Mengikut terma perjanjian',
+                    rules: 'Menghormati jiran tetangga & menjaga kebersihan',
+                    cancellation: 'Boleh dibincangkan bersama tuan rumah'
+                },
+                reviews: [
+                    { name: 'Pengurusan UpsiRent-I', date: 'Terkini', stars: 5, comment: 'Penyenaraian baharu yang telah disahkan nombor perhubungan hos.' }
+                ]
+            };
+
+            properties.unshift(newProp);
+            closeLandlordModal();
+            renderListings();
+            showToast('Tahniah! Iklan hartanah anda telah berjaya dimuat naik ke portal.', 'success');
+        }
+
+        // ==========================================
+        // FUNGSI PENGESAHAN DISKAUN 10% PELAJAR
+        // ==========================================
+
+        function openVerifyModal() {
+            document.getElementById('verifyModal').classList.remove('hidden');
+        }
+
+        function closeVerifyModal() {
+            document.getElementById('verifyModal').classList.add('hidden');
+        }
+
+        function submitStudentVerification(e) {
+            e.preventDefault();
+            const name = document.getElementById('stuName').value.trim();
+            const matric = document.getElementById('stuMatric').value.trim().toUpperCase();
+            const docType = document.getElementById('stuDocType').value;
+
+            isStudentVerified = true;
+            studentProfile = { name, matric, docType };
+
+            document.getElementById('verifyBtnText').innerText = `Pelajar: ${matric} (-10%)`;
+            document.getElementById('verifyBtn').className = 'flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-extrabold text-xs transition shadow-sm';
+
+            document.getElementById('studentActiveBanner').classList.remove('hidden');
+            document.getElementById('verifiedStudentInfo').innerText = `Tahniah ${name} (${matric})! Dokumen "${docType}" anda disahkan. Diskaun 10% dipotong automatik pada semua sewaan.`;
+
+            closeVerifyModal();
+            renderListings();
+            showToast('Diskaun Pelajar 10% berjaya diaktifkan!', 'success');
+        }
+
+        function removeVerification() {
+            isStudentVerified = false;
+            studentProfile = null;
+            document.getElementById('verifyBtnText').innerText = 'Diskaun 10% Pelajar';
+            document.getElementById('verifyBtn').className = 'flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl border-2 border-pinkbrand-300 bg-pinkbrand-50 hover:bg-pinkbrand-100 text-pinkbrand-700 font-extrabold text-xs transition';
+            document.getElementById('studentActiveBanner').classList.add('hidden');
+            renderListings();
+            showToast('Telah kembali ke harga biasa bukan pelajar.', 'info');
+        }
+
+        // ==========================================
+        // FUNGSI MODAL INFO GUIDE & ACCESSIBILITY
+        // ==========================================
+
+        function openInfoModal(type) {
+            const body = document.getElementById('infoModalBody');
+            if (type === 'bus') {
+                body.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900"><i class="fa-solid fa-bus text-pinkbrand-500 mr-2"></i>Info Laluan Bas Shuttle UPSI Percuma</h3>
+                        <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <ul class="space-y-3 text-xs sm:text-sm text-slate-600">
+                        <li class="p-3 rounded-2xl bg-pinkbrand-50 border border-pinkbrand-100">
+                            <strong class="text-slate-900">Laluan Zon A (Proton City ↔ KSAS ↔ KSAJS):</strong><br />
+                            Kekerapan setiap 20–30 minit bermula seawal 7:15 pagi hingga 10:30 malam. Hentian rasmi di Tasik Proton City dan hadapan Kolej Kediaman.
+                        </li>
+                        <li class="p-3 rounded-2xl bg-pinkbrand-50 border border-pinkbrand-100">
+                            <strong class="text-slate-900">Laluan Zon B (Taman Bahtera & Taman Universiti):</strong><br />
+                            Hanya 400m-600m jalan kaki terus ke Pintu Utama atau Pintu Timur KSAJS. Pelajar boleh menaiki bas pengantara terus ke KSAS di Pintu Gerbang.
+                        </li>
+                        <li class="p-3 rounded-2xl bg-pinkbrand-50 border border-pinkbrand-100">
+                            <strong class="text-slate-900">Laluan Zon Behrang 2020:</strong><br />
+                            Sesuai untuk pelajar berkongsi kereta/motosikal (kira-kira 8 minit perjalanan melalui jalan persekutuan).
+                        </li>
+                    </ul>
+                `;
+            } else if (type === 'checklist') {
+                body.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900"><i class="fa-solid fa-clipboard-check text-pinkbrand-500 mr-2"></i>Panduan Anti-Scam & Perjanjian Sewa</h3>
+                        <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-slate-600">
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Pastikan anda melihat gambar semua ruang bilik atau buat lawatan tapak sebelum memindahkan deposit.</span></li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Perjanjian bertulis mesti menyatakan tempoh notis pemulangan deposit secara telus (biasanya 7-14 hari selepas tamat semester).</span></li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Jangan hantar wang ke akaun peribadi yang namanya berbeza daripada nama tuan rumah yang berdaftar.</span></li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span>Gunakan pembantu <strong>Gemini AI</strong> di portal ini untuk menyemak sebarang klausa kontrak yang meragukan!</span></li>
+                    </ul>
+                `;
+            } else {
+                body.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900"><i class="fa-solid fa-map-location-dot text-pinkbrand-500 mr-2"></i>Kemudahan Penting Tanjung Malim</h3>
+                        <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="space-y-2.5 text-xs sm:text-sm text-slate-600">
+                        <p><strong>Pengangkutan:</strong> Stesen KTM/ETS Tanjung Malim & Terminal Bas Ekspres (5 minit dari KSAJS).</p>
+                        <p><strong>Pasaraya:</strong> TF Value-Mart Behrang 2020, Speedmart Proton City & Kedai Runcit Taman Bahtera.</p>
+                        <p><strong>Kesihatan:</strong> Pusat Kesihatan Universiti (PKU UPSI) & Klinik Kesihatan Tanjung Malim (24 jam kecemasan).</p>
+                    </div>
+                `;
+            }
+            document.getElementById('infoModal').classList.remove('hidden');
+        }
+
+        // Alias supaya serasi dengan butang lama jika ada
+        const openInfoGuide = openInfoModal;
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+
+        function resetFilters() {
+            document.getElementById('locationFilter').value = 'all';
+            document.getElementById('availabilityFilter').value = 'all';
+            document.getElementById('priceFilter').value = '99999';
+            document.getElementById('searchInput').value = '';
+            isWishlistOnly = false;
+            document.getElementById('filterStatusBadge').classList.add('hidden');
+            renderListings();
+        }
+
+        function toggleLargeText() {
+            largeTextMode = !largeTextMode;
+            document.body.style.fontSize = largeTextMode ? '112%' : '100%';
+            document.getElementById('largeTextLabel').innerText = largeTextMode ? 'Tulisan Biasa' : 'Tulisan Besar';
+            showToast(largeTextMode ? 'Mod tulisan besar diaktifkan (Mesra Semua Umur)' : 'Kembali ke saiz tulisan asal', 'info');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-emerald-600 text-white' : type === 'info' ? 'bg-slate-900 text-white' : 'bg-rose-600 text-white';
+
+            toast.className = `${bgClass} px-4 py-2.5 rounded-2xl shadow-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition duration-300 transform translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class="${type === 'success' ? 'fa-solid fa-circle-check text-emerald-300' : 'fa-solid fa-circle-info text-pinkbrand-300'}"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Inisialisasi Mula
+        updateWishlistBadge();
+        renderListings();
+    </script>
+</body>
+
+</html>

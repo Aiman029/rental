@@ -1,0 +1,18 @@
+<?php
+// Local Environment Configuration Template
+// Copy this file to config.local.php and provide your actual Gemini API key if available.
+
+return [
+    'db' => [
+        'host' => '127.0.0.1',
+        'port' => '3306',
+        'name' => 'upsirent_db',
+        'user' => 'root',
+        'pass' => '',
+        'charset' => 'utf8mb4'
+    ],
+    'gemini' => [
+        'api_key' => '', // Insert Google Gemini API Key here (optional; fallback operates if empty)
+        'model' => 'gemini-1.5-flash', // Model name is configurable
+    ]
+];

@@ -1,0 +1,14 @@
+# Sensitive configurations
+config/config.local.php
+
+# Local uploads
+uploads/
+uploads/verifications/*
+uploads/properties/*
+!uploads/verifications/.gitkeep
+!uploads/properties/.gitkeep
+
+# Operating system files
+.DS_Store
+Thumbs.db
+*.log
