@@ -108,13 +108,13 @@ http://localhost/HACK/
 > 
 > Akaun sedia ada (seed) di bawah disediakan khas untuk tujuan penilaian fungsi khusus (seperti panel Admin moderasi):
 
-| Peranan (Role) | E-mel | Status Pengesahan | Keistimewaan / Tujuan Ujian |
-|----------------|-------|-------------------|-----------------------------|
-| **Pentadbir (Admin)** | `admin@upsi.edu.my` | Verified | Moderasi permohonan, semak dokumen pelajar, urus akaun pengguna |
-| **Tuan Rumah (Landlord)** | `landlord@upsirent.my` | Unverified | Iklankan rumah sewa & homestay, pantau status kelulusan |
-| **Tuan Rumah 2** | `puan.salmah@upsirent.my` | Unverified | Menguruskan kediaman Proton City |
-| **Pelajar Biasa (Student)**| `student@siswa.upsi.edu.my` | Unverified | Uji muat naik kad matrik untuk mohon diskaun 10%, wishlist |
-| **Pelajar Sah (Verified)**| `verified@siswa.upsi.edu.my` | Verified | Uji paparan harga potongan automatik 10% di laman utama |
+| Peranan (Role) | E-mel | Kata Laluan | Status Pengesahan | Keistimewaan / Tujuan Ujian |
+|----------------|-------|-------------|-------------------|-----------------------------|
+| **Pentadbir (Admin)** | `admin@upsi.edu.my` | `Password123!` | Verified | Moderasi permohonan, semak dokumen pelajar, urus akaun pengguna |
+| **Tuan Rumah (Landlord)** | `landlord@upsirent.my` | `Password123!` | Unverified | Iklankan rumah sewa & homestay, pantau status kelulusan |
+| **Tuan Rumah 2** | `puan.salmah@upsirent.my` | `Password123!` | Unverified | Menguruskan kediaman Proton City |
+| **Pelajar Biasa (Student)**| `student@siswa.upsi.edu.my` | `Password123!` | Unverified | Uji muat naik kad matrik untuk mohon diskaun 10%, wishlist |
+| **Pelajar Sah (Verified)**| `verified@siswa.upsi.edu.my` | `Password123!` | Verified | Uji paparan harga potongan automatik 10% di laman utama |
 
 ---
 
